@@ -2,7 +2,7 @@
 
 **Version:** 1.0.0  
 **Status:** Produktionsreif  
-**Entwickelt von:** Manus AI  
+**Entwickelt von:** Tibo 
 
 ## 🚀 Überblick
 
