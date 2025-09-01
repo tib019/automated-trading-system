@@ -162,7 +162,6 @@ open http://localhost:5174
 
 ## 📄 Lizenz
 
-Dieses System wurde von Manus AI entwickelt. Alle Rechte vorbehalten.
 
 ---
 
