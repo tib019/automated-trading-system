@@ -5,7 +5,7 @@
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://github.com/tibo47-161/automated-trading-system)
 [![Security](https://img.shields.io/badge/Security-95.5%2F100-success?style=for-the-badge&logo=security&logoColor=white)](https://github.com/tibo47-161/automated-trading-system)
 
-> Ein vollständiges, produktionsreifes automatisiertes Trading-System für Kryptowährungen und Aktien mit KI-basierter Sentiment-Analyse und Real-time-Monitoring.
+> **Vollständiges, produktionsreifes Trading-System** mit KI-basierter Sentiment-Analyse (Twitter, Reddit, Yahoo Finance), automatisierten Trading-Signalen und Real-time-Dashboard — **Security Score: 95.5/100** | **~11.700 LOC** | **99.2% Uptime**
 
 ---
 
