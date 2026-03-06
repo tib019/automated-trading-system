@@ -356,7 +356,7 @@ Beiträge sind willkommen! Bitte erstelle einen Pull Request oder öffne ein Iss
 ## 👨‍💻 Entwickler
 
 **Tobias Heiko Buß**
-- 📧 Email: THBuss@outlook.de
+- 📧 Email: tobias.buss.dev@gmail.com
 - 🐙 GitHub: [@tibo47-161](https://github.com/tibo47-161)
 - 📍 Hamburg, Deutschland
 
