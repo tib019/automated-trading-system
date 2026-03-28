@@ -312,7 +312,7 @@ def get_brokers():
 
 if __name__ == '__main__':
     print("=" * 80)
-    print("🌐 TRADINGVIEW WEBHOOK SERVER")
+ print(" TRADINGVIEW WEBHOOK SERVER")
     print("=" * 80)
     print("Starting TradingView Webhook Server...")
     print(f"Health Check: http://localhost:5000/")

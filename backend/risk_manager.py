@@ -559,7 +559,7 @@ class RiskManager:
 def main():
     """Test des Risikomanagement-Systems"""
     print("=" * 80)
-    print("🛡️ RISK MANAGEMENT SYSTEM TEST")
+ print("️ RISK MANAGEMENT SYSTEM TEST")
     print("=" * 80)
     
     risk_manager = RiskManager()
@@ -588,7 +588,7 @@ def main():
     
     # Validiere und öffne Position
     is_valid, reason = risk_manager.validate_signal(test_signal_1)
-    print(f"Signal Validation: {'✅' if is_valid else '❌'} {reason}")
+ print(f"Signal Validation: {'' if is_valid else ''} {reason}")
     
     if is_valid:
         position_id = portfolio_tracker.open_position(test_signal_1)
@@ -600,7 +600,7 @@ def main():
     # Portfolio-Monitoring
     monitoring_result = risk_manager.monitor_portfolio()
     
-    print(f"\n📊 PORTFOLIO METRICS:")
+ print(f"\n PORTFOLIO METRICS:")
     metrics = monitoring_result['portfolio_metrics']
     print(f"   Total Value: ${metrics['total_value']:,.2f}")
     print(f"   Cash Balance: ${metrics['cash_balance']:,.2f}")
@@ -611,19 +611,19 @@ def main():
     print(f"   Risk Level: {metrics['risk_level']}")
     
     if monitoring_result['alerts']:
-        print(f"\n⚠️ ALERTS:")
+ print(f"\n️ ALERTS:")
         for alert in monitoring_result['alerts']:
             print(f"   - {alert}")
     
     if monitoring_result['actions_taken']:
-        print(f"\n🚨 ACTIONS TAKEN:")
+ print(f"\n ACTIONS TAKEN:")
         for action in monitoring_result['actions_taken']:
             print(f"   - {action}")
     
     # Zeige offene Positionen
     open_positions = portfolio_tracker.get_open_positions()
     if open_positions:
-        print(f"\n📈 OPEN POSITIONS:")
+ print(f"\n OPEN POSITIONS:")
         for pos in open_positions:
             pnl_percent = (pos.unrealized_pnl / pos.position_size_usd) * 100
             print(f"   {pos.symbol}: ${pos.unrealized_pnl:+,.2f} ({pnl_percent:+.1f}%)")

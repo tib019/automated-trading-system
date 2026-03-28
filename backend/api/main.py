@@ -193,9 +193,9 @@ def internal_error(error):
     }), 500
 
 if __name__ == '__main__':
-    print("🚀 Starting Trading System API...")
-    print("📊 Dashboard: http://localhost:5000")
-    print("🔗 API Health: http://localhost:5000/api/health")
-    print("📈 System Status: http://localhost:5000/api/status")
+ print(" Starting Trading System API...")
+ print(" Dashboard: http://localhost:5000")
+ print(" API Health: http://localhost:5000/api/health")
+ print(" System Status: http://localhost:5000/api/status")
     app.run(host='0.0.0.0', port=5000, debug=True)
 

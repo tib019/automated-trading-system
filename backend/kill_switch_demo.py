@@ -13,7 +13,7 @@ def simulate_market_crash_scenario():
     """Simuliere Markt-Crash-Szenario für Kill-Switch-Test"""
     
     print("=" * 80)
-    print("🚨 KILL-SWITCH DEMO - MARKET CRASH SIMULATION")
+ print(" KILL-SWITCH DEMO - MARKET CRASH SIMULATION")
     print("=" * 80)
     
     risk_manager = RiskManager()
@@ -21,7 +21,7 @@ def simulate_market_crash_scenario():
     dashboard = PortfolioDashboard()
     
     # Schritt 1: Öffne mehrere Positionen
-    print("📈 STEP 1: Opening multiple positions...")
+ print(" STEP 1: Opening multiple positions...")
     
     test_signals = [
         TradingSignal(
@@ -81,12 +81,12 @@ def simulate_market_crash_scenario():
         if is_valid:
             position_id = portfolio_tracker.open_position(signal)
             opened_positions.append((position_id, signal))
-            print(f"✅ Opened {signal.symbol}: {position_id}")
+ print(f" Opened {signal.symbol}: {position_id}")
         else:
-            print(f"❌ Failed to open {signal.symbol}: {reason}")
+ print(f" Failed to open {signal.symbol}: {reason}")
     
     # Schritt 2: Zeige initiales Portfolio
-    print(f"\n📊 STEP 2: Initial portfolio status...")
+ print(f"\n STEP 2: Initial portfolio status...")
     monitoring_result = risk_manager.monitor_portfolio()
     metrics = monitoring_result['portfolio_metrics']
     
@@ -96,7 +96,7 @@ def simulate_market_crash_scenario():
     print(f"Risk Level: {metrics['risk_level']}")
     
     # Schritt 3: Simuliere moderate Verluste
-    print(f"\n📉 STEP 3: Simulating moderate market decline (-5%)...")
+ print(f"\n STEP 3: Simulating moderate market decline (-5%)...")
     
     price_updates = [
         ("BTC-USD", 102600.00),  # -5%
@@ -118,12 +118,12 @@ def simulate_market_crash_scenario():
     print(f"Risk Level: {metrics['risk_level']}")
     
     if monitoring_result['alerts']:
-        print("⚠️ Alerts:")
+ print("️ Alerts:")
         for alert in monitoring_result['alerts']:
             print(f"  - {alert}")
     
     # Schritt 4: Simuliere schwere Verluste (Kill-Switch Trigger)
-    print(f"\n🚨 STEP 4: Simulating severe market crash (-20%)...")
+ print(f"\n STEP 4: Simulating severe market crash (-20%)...")
     
     crash_prices = [
         ("BTC-USD", 86400.00),   # -20%
@@ -139,24 +139,24 @@ def simulate_market_crash_scenario():
     monitoring_result = risk_manager.monitor_portfolio()
     metrics = monitoring_result['portfolio_metrics']
     
-    print(f"\n💥 Portfolio after market crash:")
+ print(f"\n Portfolio after market crash:")
     print(f"Portfolio Value: ${metrics['total_value']:,.2f}")
     print(f"Total P&L: ${metrics['total_pnl']:+,.2f} ({(metrics['total_pnl']/10000*100):+.1f}%)")
     print(f"Risk Level: {metrics['risk_level']}")
-    print(f"Kill-Switch Active: {'🔴 YES' if monitoring_result['kill_switch_active'] else '🟢 NO'}")
+ print(f"Kill-Switch Active: {' YES' if monitoring_result['kill_switch_active'] else ' NO'}")
     
     if monitoring_result['alerts']:
-        print("\n⚠️ ALERTS:")
+ print("\n️ ALERTS:")
         for alert in monitoring_result['alerts']:
             print(f"  - {alert}")
     
     if monitoring_result['actions_taken']:
-        print("\n🚨 ACTIONS TAKEN:")
+ print("\n ACTIONS TAKEN:")
         for action in monitoring_result['actions_taken']:
             print(f"  - {action}")
     
     # Schritt 5: Zeige finale Position-Status
-    print(f"\n📋 STEP 5: Final position status...")
+ print(f"\n STEP 5: Final position status...")
     
     open_positions = portfolio_tracker.get_open_positions()
     print(f"Open Positions Remaining: {len(open_positions)}")
@@ -169,7 +169,7 @@ def simulate_market_crash_scenario():
         print("  All positions closed by Kill-Switch")
     
     # Schritt 6: Generiere finalen Bericht
-    print(f"\n📊 STEP 6: Generating final report...")
+ print(f"\n STEP 6: Generating final report...")
     
     final_report = dashboard.generate_portfolio_report()
     
@@ -194,7 +194,7 @@ def test_manual_kill_switch():
     """Teste manuellen Kill-Switch"""
     
     print(f"\n{'='*80}")
-    print("🛑 MANUAL KILL-SWITCH TEST")
+ print(" MANUAL KILL-SWITCH TEST")
     print("=" * 80)
     
     risk_manager = RiskManager()
@@ -205,7 +205,7 @@ def test_manual_kill_switch():
     
     # Prüfe Status
     monitoring_result = risk_manager.monitor_portfolio()
-    print(f"Kill-Switch Status: {'🔴 ACTIVE' if monitoring_result['kill_switch_active'] else '🟢 INACTIVE'}")
+ print(f"Kill-Switch Status: {' ACTIVE' if monitoring_result['kill_switch_active'] else ' INACTIVE'}")
     
     # Deaktiviere Kill-Switch
     print("Deactivating Kill-Switch...")
@@ -213,12 +213,12 @@ def test_manual_kill_switch():
     
     # Prüfe Status erneut
     monitoring_result = risk_manager.monitor_portfolio()
-    print(f"Kill-Switch Status: {'🔴 ACTIVE' if monitoring_result['kill_switch_active'] else '🟢 INACTIVE'}")
+ print(f"Kill-Switch Status: {' ACTIVE' if monitoring_result['kill_switch_active'] else ' INACTIVE'}")
 
 def main():
     """Hauptfunktion für Kill-Switch-Demo"""
     
-    print("🚨 TRADING SYSTEM KILL-SWITCH DEMONSTRATION")
+ print(" TRADING SYSTEM KILL-SWITCH DEMONSTRATION")
     print("This demo shows how the system protects against major losses")
     print()
     
@@ -229,7 +229,7 @@ def main():
     test_manual_kill_switch()
     
     print(f"\n{'='*80}")
-    print("✅ KILL-SWITCH DEMO COMPLETED")
+ print(" KILL-SWITCH DEMO COMPLETED")
     print("=" * 80)
     print("Key Features Demonstrated:")
     print("• Automatic position opening with risk validation")

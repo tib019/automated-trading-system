@@ -49,7 +49,7 @@ def demo_with_realistic_thresholds():
         if signal:
             signals_generated.append(signal)
             
-            print(f"🎯 SIGNAL GENERATED!")
+ print(f" SIGNAL GENERATED!")
             print(f"   Symbol: {signal.symbol}")
             print(f"   Type: {signal.signal_type.value}")
             print(f"   Strength: {signal.strength.value}")
@@ -61,13 +61,13 @@ def demo_with_realistic_thresholds():
             print(f"   Risk/Reward Ratio: 1:{signal.risk_reward_ratio:.2f}")
             print(f"   Reasoning: {signal.reasoning}")
             
-            print(f"\n   📊 Signal Components:")
+ print(f"\n Signal Components:")
             print(f"      Sentiment Score: {signal.sentiment_score:+.3f}")
             print(f"      Technical Score: {signal.technical_score:+.3f}")
             print(f"      Social Volume: {signal.volume_score} mentions")
             
         else:
-            print(f"❌ No signal generated for {symbol}")
+ print(f" No signal generated for {symbol}")
         
         print()
     
@@ -77,7 +77,7 @@ def demo_with_realistic_thresholds():
     print("=" * 80)
     
     if signals_generated:
-        print(f"✅ Generated {len(signals_generated)} trading signals:")
+ print(f" Generated {len(signals_generated)} trading signals:")
         print()
         
         for i, signal in enumerate(signals_generated, 1):
@@ -86,10 +86,10 @@ def demo_with_realistic_thresholds():
         
         print(f"\nExample Trading Command Format:")
         best_signal = max(signals_generated, key=lambda s: s.confidence)
-        print(f"📋 {best_signal.symbol} | {best_signal.signal_type.value} | Entry: {best_signal.entry_price} | SL: -{abs((best_signal.entry_price-best_signal.stop_loss)/best_signal.entry_price*100):.1f}% | TP: +{abs((best_signal.take_profit-best_signal.entry_price)/best_signal.entry_price*100):.1f}% | Grund: {best_signal.reasoning}")
+ print(f" {best_signal.symbol} | {best_signal.signal_type.value} | Entry: {best_signal.entry_price} | SL: -{abs((best_signal.entry_price-best_signal.stop_loss)/best_signal.entry_price*100):.1f}% | TP: +{abs((best_signal.take_profit-best_signal.entry_price)/best_signal.entry_price*100):.1f}% | Grund: {best_signal.reasoning}")
         
     else:
-        print("❌ No signals generated. Market conditions may be too neutral or volatile.")
+ print(" No signals generated. Market conditions may be too neutral or volatile.")
     
     # Restore original configuration
     config.SIGNAL_CONFIG['min_sentiment_score'] = original_min_sentiment
@@ -135,13 +135,13 @@ def analyze_current_market_conditions():
         
         if combined_score > 0.05:
             market_summary['bullish_signals'] += 1
-            print(f"  📈 Leaning BULLISH ({combined_score:+.3f})")
+ print(f" Leaning BULLISH ({combined_score:+.3f})")
         elif combined_score < -0.05:
             market_summary['bearish_signals'] += 1
-            print(f"  📉 Leaning BEARISH ({combined_score:+.3f})")
+ print(f" Leaning BEARISH ({combined_score:+.3f})")
         else:
             market_summary['neutral_signals'] += 1
-            print(f"  ➡️  NEUTRAL ({combined_score:+.3f})")
+ print(f" ️ NEUTRAL ({combined_score:+.3f})")
         
         # Spezielle Bedingungen
         rsi = technical_data.get('rsi', 50)
@@ -154,19 +154,19 @@ def analyze_current_market_conditions():
             market_summary['high_volume_symbols'].append(symbol)
     
     # Market Summary
-    print(f"\n📊 MARKET SUMMARY:")
+ print(f"\n MARKET SUMMARY:")
     print(f"   Bullish Signals: {market_summary['bullish_signals']}")
     print(f"   Bearish Signals: {market_summary['bearish_signals']}")
     print(f"   Neutral Signals: {market_summary['neutral_signals']}")
     
     if market_summary['oversold_symbols']:
-        print(f"   🔵 Oversold (RSI < 30): {', '.join(market_summary['oversold_symbols'])}")
+ print(f" Oversold (RSI < 30): {', '.join(market_summary['oversold_symbols'])}")
     
     if market_summary['overbought_symbols']:
-        print(f"   🔴 Overbought (RSI > 70): {', '.join(market_summary['overbought_symbols'])}")
+ print(f" Overbought (RSI > 70): {', '.join(market_summary['overbought_symbols'])}")
     
     if market_summary['high_volume_symbols']:
-        print(f"   📢 High Social Volume: {', '.join(market_summary['high_volume_symbols'])}")
+ print(f" High Social Volume: {', '.join(market_summary['high_volume_symbols'])}")
 
 def main():
     """Hauptfunktion für Demo"""
@@ -178,7 +178,7 @@ def main():
     print(f"{'='*80}")
     print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Signals Generated: {len(signals)}")
-    print(f"System Status: ✅ Operational")
+ print(f"System Status: Operational")
 
 if __name__ == "__main__":
     main()

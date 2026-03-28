@@ -878,7 +878,7 @@ Die Trading-Statistiken-Sektion bietet aggregierte Metriken über Ihre Trading-P
 
 Der Signals-Tab zeigt aktuelle Trading-Signale und Marktanalysen an. Die Hauptansicht präsentiert eine Liste der neuesten Signale, sortiert nach Konfidenz und Stärke. Jedes Signal zeigt das Symbol, die empfohlene Aktion (Buy/Sell/Hold), die Signal-Stärke (Weak/Moderate/Strong), die Konfidenz-Bewertung und eine kurze Begründung.
 
-Signal-Details können erweitert werden, um zusätzliche Informationen zu zeigen. Dazu gehören der empfohlene Entry-Preis, Stop-Loss-Level, Take-Profit-Ziele und die zugrunde liegenden technischen Indikatoren. Ein visueller Indikator zeigt die Stärke des Signals mit einem Sternen-Rating-System (⭐ bis ⭐⭐⭐).
+Signal-Details können erweitert werden, um zusätzliche Informationen zu zeigen. Dazu gehören der empfohlene Entry-Preis, Stop-Loss-Level, Take-Profit-Ziele und die zugrunde liegenden technischen Indikatoren. Ein visueller Indikator zeigt die Stärke des Signals mit einem Sternen-Rating-System ( bis ).
 
 Die technischen Indikatoren werden in einer separaten Sektion für jedes überwachte Symbol angezeigt. Dazu gehören Moving Averages (SMA/EMA), RSI, MACD und Bollinger Bands. Jeder Indikator wird mit seinem aktuellen Wert und einer Interpretation (Bullish/Bearish/Neutral) angezeigt.
 

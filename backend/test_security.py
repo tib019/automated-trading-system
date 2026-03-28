@@ -43,7 +43,7 @@ class TestSecurityManager(unittest.TestCase):
         decrypted = self.security.decrypt_data(encrypted)
         self.assertEqual(decrypted, test_data)
         
-        print(f"✅ Encryption/Decryption test passed")
+ print(f" Encryption/Decryption test passed")
     
     def test_api_key_storage(self):
         """Test API key storage and retrieval"""
@@ -60,7 +60,7 @@ class TestSecurityManager(unittest.TestCase):
         self.assertEqual(retrieved_key, api_key)
         self.assertEqual(retrieved_secret, api_secret)
         
-        print(f"✅ API Key storage test passed")
+ print(f" API Key storage test passed")
     
     def test_webhook_signature(self):
         """Test webhook signature generation and validation"""
@@ -81,7 +81,7 @@ class TestSecurityManager(unittest.TestCase):
         is_invalid = self.security.validate_webhook_signature(payload, invalid_signature, secret)
         self.assertFalse(is_invalid)
         
-        print(f"✅ Webhook signature test passed")
+ print(f" Webhook signature test passed")
     
     def test_input_sanitization(self):
         """Test input sanitization"""
@@ -95,7 +95,7 @@ class TestSecurityManager(unittest.TestCase):
         sanitized_long = self.security.sanitize_input(long_input, max_length=100)
         self.assertEqual(len(sanitized_long), 100)
         
-        print(f"✅ Input sanitization test passed")
+ print(f" Input sanitization test passed")
     
     def test_security_event_logging(self):
         """Test security event logging"""
@@ -111,7 +111,7 @@ class TestSecurityManager(unittest.TestCase):
         self.assertGreater(len(events), 0)
         self.assertEqual(events[0]['event_type'], 'test_event')
         
-        print(f"✅ Security event logging test passed")
+ print(f" Security event logging test passed")
 
 
 class TestRateLimiter(unittest.TestCase):
@@ -158,7 +158,7 @@ class TestRateLimiter(unittest.TestCase):
         is_limited = self.rate_limiter.is_rate_limited(ip_address, endpoint)
         self.assertTrue(is_limited)
         
-        print(f"✅ Rate limiting test passed")
+ print(f" Rate limiting test passed")
 
 
 class TestSessionManager(unittest.TestCase):
@@ -210,7 +210,7 @@ class TestSessionManager(unittest.TestCase):
         is_valid_after_invalidation = self.session_manager.validate_session(session_id, ip_address)
         self.assertFalse(is_valid_after_invalidation)
         
-        print(f"✅ Session management test passed")
+ print(f" Session management test passed")
 
 
 def run_performance_tests():
@@ -229,7 +229,7 @@ def run_performance_tests():
         decrypted = security.decrypt_data(encrypted)
     end_time = time.time()
     
-    print(f"✅ Encryption/Decryption (100 iterations): {end_time - start_time:.4f} seconds")
+ print(f" Encryption/Decryption (100 iterations): {end_time - start_time:.4f} seconds")
     
     # Test signature generation performance
     start_time = time.time()
@@ -238,7 +238,7 @@ def run_performance_tests():
         signature = security.generate_webhook_signature(payload, "secret")
     end_time = time.time()
     
-    print(f"✅ Webhook Signature Generation (1000 iterations): {end_time - start_time:.4f} seconds")
+ print(f" Webhook Signature Generation (1000 iterations): {end_time - start_time:.4f} seconds")
 
 
 def run_stress_tests():
@@ -274,7 +274,7 @@ def run_stress_tests():
         is_limited = rate_limiter.is_rate_limited(ip, "api")
     end_time = time.time()
     
-    print(f"✅ Rate Limiter (1000 requests): {end_time - start_time:.4f} seconds")
+ print(f" Rate Limiter (1000 requests): {end_time - start_time:.4f} seconds")
     
     # Test database performance under load
     security = SecurityManager()
@@ -290,7 +290,7 @@ def run_stress_tests():
         )
     end_time = time.time()
     
-    print(f"✅ Security Event Logging (100 events): {end_time - start_time:.4f} seconds")
+ print(f" Security Event Logging (100 events): {end_time - start_time:.4f} seconds")
 
 
 def run_security_audit():
@@ -307,16 +307,16 @@ def run_security_audit():
         stat_info = os.stat(key_file)
         permissions = oct(stat_info.st_mode)[-3:]
         if permissions == '600':
-            print("✅ Master key file has correct permissions (600)")
+ print(" Master key file has correct permissions (600)")
         else:
-            print(f"⚠️ Master key file permissions: {permissions} (should be 600)")
+ print(f"️ Master key file permissions: {permissions} (should be 600)")
     
     # Check database file permissions
     db_file = '/home/ubuntu/trading_system/security.db'
     if os.path.exists(db_file):
         stat_info = os.stat(db_file)
         permissions = oct(stat_info.st_mode)[-3:]
-        print(f"✅ Security database permissions: {permissions}")
+ print(f" Security database permissions: {permissions}")
     
     # Test input validation
     dangerous_inputs = [
@@ -332,10 +332,10 @@ def run_security_audit():
         sanitized = security.sanitize_input(dangerous_input)
         if any(char in sanitized for char in ['<', '>', '"', "'", '\x00']):
             all_safe = False
-            print(f"⚠️ Input sanitization failed for: {dangerous_input[:50]}...")
+ print(f"️ Input sanitization failed for: {dangerous_input[:50]}...")
     
     if all_safe:
-        print("✅ Input sanitization working correctly")
+ print(" Input sanitization working correctly")
     
     # Test encryption strength
     test_data = "sensitive_data_12345"
@@ -343,11 +343,11 @@ def run_security_audit():
     encrypted2 = security.encrypt_data(test_data)
     
     if encrypted1 != encrypted2:
-        print("✅ Encryption uses proper randomization (different outputs for same input)")
+ print(" Encryption uses proper randomization (different outputs for same input)")
     else:
-        print("⚠️ Encryption may not be using proper randomization")
+ print("️ Encryption may not be using proper randomization")
     
-    print("✅ Security audit completed")
+ print(" Security audit completed")
 
 
 if __name__ == "__main__":
@@ -383,9 +383,9 @@ if __name__ == "__main__":
     print("\n" + "="*60)
     print("SECURITY TESTS COMPLETED")
     if result.wasSuccessful():
-        print("✅ ALL TESTS PASSED")
+ print(" ALL TESTS PASSED")
     else:
-        print("❌ SOME TESTS FAILED")
+ print(" SOME TESTS FAILED")
         print(f"Failures: {len(result.failures)}")
         print(f"Errors: {len(result.errors)}")
     print("="*60)

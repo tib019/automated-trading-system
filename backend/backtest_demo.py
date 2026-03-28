@@ -79,7 +79,7 @@ class BacktestDemo:
         """Führe Demo-Backtest mit synthetischen Daten durch"""
         
         print("=" * 80)
-        print("📊 BACKTESTING DEMO - SYNTHETIC DATA")
+ print(" BACKTESTING DEMO - SYNTHETIC DATA")
         print("=" * 80)
         
         # Demo-Parameter
@@ -338,12 +338,12 @@ def main():
     result = demo.run_demo_backtest()
     
     # Erstelle Visualisierung
-    print(f"\n📊 Creating backtest visualization...")
+ print(f"\n Creating backtest visualization...")
     chart_path = demo.create_backtest_visualization(result)
     print(f"Chart saved: {chart_path}")
     
     # Generiere Bericht
-    print(f"\n📋 Generating comprehensive report...")
+ print(f"\n Generating comprehensive report...")
     report = demo.generate_demo_report(result)
     print(report)
     
@@ -352,7 +352,7 @@ def main():
     with open(report_path, 'w') as f:
         f.write(report)
     
-    print(f"\n💾 Report saved: {report_path}")
+ print(f"\n Report saved: {report_path}")
     
     # Speichere JSON-Ergebnisse
     results_path = '/home/ubuntu/trading_system/backtest_demo_results.json'
@@ -370,7 +370,7 @@ def main():
     
     print(f"Results saved: {results_path}")
     
-    print(f"\n✅ BACKTESTING DEMO COMPLETED SUCCESSFULLY!")
+ print(f"\n BACKTESTING DEMO COMPLETED SUCCESSFULLY!")
 
 if __name__ == "__main__":
     main()

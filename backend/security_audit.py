@@ -32,7 +32,7 @@ class SecurityAuditor:
     
     def run_full_audit(self) -> Dict:
         """Run complete security audit"""
-        print("🔒 Starting Security Audit...")
+ print(" Starting Security Audit...")
         print("=" * 50)
         
         # File system security
@@ -70,7 +70,7 @@ class SecurityAuditor:
     
     def check_file_permissions(self):
         """Check file and directory permissions"""
-        print("📁 Checking file permissions...")
+ print(" Checking file permissions...")
         
         critical_files = [
             '/home/ubuntu/trading_system/.master_key',
@@ -106,7 +106,7 @@ class SecurityAuditor:
     
     def check_sensitive_files(self):
         """Check for sensitive files in wrong locations"""
-        print("🔍 Checking for sensitive files...")
+ print(" Checking for sensitive files...")
         
         # Check for API keys in code files
         code_files = []
@@ -143,7 +143,7 @@ class SecurityAuditor:
     
     def check_database_security(self):
         """Check database security configuration"""
-        print("🗄️ Checking database security...")
+ print("️ Checking database security...")
         
         db_files = [
             '/home/ubuntu/trading_system/security.db',
@@ -180,7 +180,7 @@ class SecurityAuditor:
     
     def check_configuration_security(self):
         """Check configuration security"""
-        print("⚙️ Checking configuration security...")
+ print("️ Checking configuration security...")
         
         # Check environment variables
         sensitive_env_vars = [
@@ -211,7 +211,7 @@ class SecurityAuditor:
     
     def check_api_security(self):
         """Check API security measures"""
-        print("🌐 Checking API security...")
+ print(" Checking API security...")
         
         # Check if API keys are encrypted
         try:
@@ -244,7 +244,7 @@ class SecurityAuditor:
     
     def check_encryption_security(self):
         """Check encryption implementation"""
-        print("🔐 Checking encryption security...")
+ print(" Checking encryption security...")
         
         try:
             # Test encryption strength
@@ -271,7 +271,7 @@ class SecurityAuditor:
     
     def check_network_security(self):
         """Check network security configuration"""
-        print("🌍 Checking network security...")
+ print(" Checking network security...")
         
         # Check for open ports
         try:
@@ -294,7 +294,7 @@ class SecurityAuditor:
     
     def check_input_validation(self):
         """Check input validation and sanitization"""
-        print("🧹 Checking input validation...")
+ print(" Checking input validation...")
         
         dangerous_inputs = [
             "<script>alert('xss')</script>",
@@ -323,7 +323,7 @@ class SecurityAuditor:
     
     def check_auth_security(self):
         """Check authentication and authorization"""
-        print("🔑 Checking authentication security...")
+ print(" Checking authentication security...")
         
         # Check session management
         try:
@@ -350,7 +350,7 @@ class SecurityAuditor:
     
     def check_logging_security(self):
         """Check logging and monitoring"""
-        print("📝 Checking logging security...")
+ print(" Checking logging security...")
         
         log_files = [
             '/home/ubuntu/trading_system/security.log',
@@ -488,13 +488,13 @@ def main():
     print(f"Vulnerabilities: {len(results['vulnerabilities'])}")
     
     if results['score'] >= 90:
-        print("🟢 EXCELLENT SECURITY")
+ print(" EXCELLENT SECURITY")
     elif results['score'] >= 80:
-        print("🟡 GOOD SECURITY")
+ print(" GOOD SECURITY")
     elif results['score'] >= 60:
-        print("🟠 MODERATE SECURITY")
+ print(" MODERATE SECURITY")
     else:
-        print("🔴 POOR SECURITY")
+ print(" POOR SECURITY")
     
     # Save report
     report = auditor.generate_report()

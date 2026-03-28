@@ -95,9 +95,9 @@ def get_orders():
     })
 
 if __name__ == '__main__':
-    print("🚀 Starting Trading System API...")
-    print("📊 API Base: http://localhost:5001" )
-    print("✅ Demo mode - Basic endpoints active")
+ print(" Starting Trading System API...")
+ print(" API Base: http://localhost:5001" )
+ print(" Demo mode - Basic endpoints active")
     print("")
     print("Available endpoints:")
     print("  GET /api/health")

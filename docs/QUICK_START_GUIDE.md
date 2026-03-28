@@ -70,10 +70,10 @@ python init_database.py
 
 **Erwartete Ausgabe:**
 ```
-✅ Database initialized successfully
-✅ Tables created: 7
-✅ Indexes created: 12
-✅ Initial data loaded
+ Database initialized successfully
+ Tables created: 7
+ Indexes created: 12
+ Initial data loaded
 ```
 
 ## Schritt 5: System testen
@@ -91,9 +91,9 @@ python src/main_simple.py
 
 **Erfolgreiche Ausgabe:**
 ```
-🚀 Starting Trading System API...
-📊 API Base: http://localhost:5001
-✅ All components healthy
+ Starting Trading System API...
+ API Base: http://localhost:5001
+ All components healthy
 ```
 
 ## Schritt 6: Dashboard starten
@@ -191,5 +191,5 @@ curl -X POST http://localhost:5001/api/orders \
 
 ---
 
-**Herzlichen Glückwunsch!** 🎉 Ihr Trading-System ist jetzt einsatzbereit. Beginnen Sie mit Paper Trading, um sich mit dem System vertraut zu machen, bevor Sie zu Live Trading wechseln.
+**Herzlichen Glückwunsch!** Ihr Trading-System ist jetzt einsatzbereit. Beginnen Sie mit Paper Trading, um sich mit dem System vertraut zu machen, bevor Sie zu Live Trading wechseln.
 

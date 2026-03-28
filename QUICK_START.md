@@ -1,9 +1,9 @@
-# 🚀 Trading System - Schnellstart
+# Trading System - Schnellstart
 
 **Geschätzte Zeit:** 15 Minuten  
 **Schwierigkeitsgrad:** Anfänger  
 
-## Schritt 1: Archiv entpacken ✅
+## Schritt 1: Archiv entpacken
 
 Sie haben das Archiv bereits entpackt! 
 
@@ -25,7 +25,7 @@ WEBHOOK_SECRET=IhrWebhookSecretHier456!
 
 ## Schritt 3: Wählen Sie Ihre Installationsmethode
 
-### 🐳 Option A: Docker (Empfohlen - Einfachste Installation)
+### Option A: Docker (Empfohlen - Einfachste Installation)
 
 ```bash
 # System starten
@@ -40,7 +40,7 @@ open http://localhost:3000
 
 **Das war's! Ihr System läuft jetzt.**
 
-### 💻 Option B: Lokale Installation
+### Option B: Lokale Installation
 
 #### Backend starten:
 ```bash
@@ -100,7 +100,7 @@ curl -X POST http://localhost:5001/api/orders \
   }'
 ```
 
-## 🎉 Herzlichen Glückwunsch!
+## Herzlichen Glückwunsch!
 
 Ihr Trading-System ist jetzt einsatzbereit!
 
@@ -121,7 +121,7 @@ Ihr Trading-System ist jetzt einsatzbereit!
 2. **Tests ausführen** - `python test_suite.py`
 3. **API-Referenz** - `docs/API_REFERENCE.md`
 
-## ⚠️ Wichtige Sicherheitshinweise
+## ️ Wichtige Sicherheitshinweise
 
 1. **Starten Sie mit Paper Trading** - Niemals sofort Live-Trading!
 2. **Starke Passwörter verwenden** - Ändern Sie alle Defaults
@@ -144,5 +144,5 @@ Ihr Trading-System ist jetzt einsatzbereit!
 
 ---
 
-**🚀 Viel Erfolg mit Ihrem automatisierten Trading-System!**
+** Viel Erfolg mit Ihrem automatisierten Trading-System!**
 

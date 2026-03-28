@@ -1,4 +1,4 @@
-# 📈 Automated Trading System
+# Automated Trading System
 
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://github.com/tibo47-161/automated-trading-system)
 [![React](https://img.shields.io/badge/React-18.0+-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://github.com/tibo47-161/automated-trading-system)
@@ -9,11 +9,11 @@
 
 ---
 
-## 🚀 Projektübersicht
+## Projektübersicht
 
 Das **Automated Trading System** ist eine umfassende Full-Stack-Anwendung, die maschinelles Lernen und Sentiment-Analyse nutzt, um automatisierte Trading-Entscheidungen zu treffen. Das System sammelt Daten aus verschiedenen Quellen (Twitter, Reddit, Yahoo Finance), analysiert diese mit KI-Algorithmen und führt Trades basierend auf generierten Signalen aus.
 
-### 🎯 Hauptziele
+### Hauptziele
 
 - **Automatisierung** des gesamten Trading-Prozesses
 - **KI-gestützte Entscheidungsfindung** durch Sentiment-Analyse
@@ -23,142 +23,142 @@ Das **Automated Trading System** ist eine umfassende Full-Stack-Anwendung, die m
 
 ---
 
-## ✨ Features
+## Features
 
-### 🤖 KI & Machine Learning
-- ✅ **Sentiment-Analyse** von Social Media (Twitter, Reddit)
-- ✅ **Signal-Generierung** basierend auf ML-Modellen
-- ✅ **Trend-Erkennung** mit technischen Indikatoren
-- ✅ **Automatische Mustererkennung** in Marktdaten
+### KI & Machine Learning
+- **Sentiment-Analyse** von Social Media (Twitter, Reddit)
+- **Signal-Generierung** basierend auf ML-Modellen
+- **Trend-Erkennung** mit technischen Indikatoren
+- **Automatische Mustererkennung** in Marktdaten
 
-### 📊 Datensammlung & Analyse
-- ✅ **Multi-Source Data Collection**: Twitter, Reddit, Yahoo Finance
-- ✅ **Real-time Marktdaten** für Kryptowährungen und Aktien
-- ✅ **Historische Datenanalyse** für Backtesting
-- ✅ **928+ Marktdaten-Punkte** gesammelt und verarbeitet
+### Datensammlung & Analyse
+- **Multi-Source Data Collection**: Twitter, Reddit, Yahoo Finance
+- **Real-time Marktdaten** für Kryptowährungen und Aktien
+- **Historische Datenanalyse** für Backtesting
+- **928+ Marktdaten-Punkte** gesammelt und verarbeitet
 
-### 🛡️ Risikomanagement
-- ✅ **Kill-Switch** für automatische Systemabschaltung bei Anomalien
-- ✅ **Portfolio-Schutz** mit Stop-Loss und Take-Profit
-- ✅ **Position-Sizing** basierend auf Risikotoleranz
-- ✅ **Drawdown-Kontrolle** zur Kapitalerhaltung
+### ️ Risikomanagement
+- **Kill-Switch** für automatische Systemabschaltung bei Anomalien
+- **Portfolio-Schutz** mit Stop-Loss und Take-Profit
+- **Position-Sizing** basierend auf Risikotoleranz
+- **Drawdown-Kontrolle** zur Kapitalerhaltung
 
-### 📈 Trading & Execution
-- ✅ **Multi-Broker-Integration** (Binance, Paper Trading)
-- ✅ **Automatische Order-Ausführung** mit Webhook-Integration
-- ✅ **6 Live-Webhook-Orders** erfolgreich getestet
-- ✅ **Support für BTC, ETH, AAPL, TSLA** und weitere Assets
+### Trading & Execution
+- **Multi-Broker-Integration** (Binance, Paper Trading)
+- **Automatische Order-Ausführung** mit Webhook-Integration
+- **6 Live-Webhook-Orders** erfolgreich getestet
+- **Support für BTC, ETH, AAPL, TSLA** und weitere Assets
 
-### 🧪 Backtesting
-- ✅ **Umfassendes Backtesting-Framework**
-- ✅ **240+ Test-Trades** mit realistischen Metriken
-- ✅ **Performance-Analyse** (Sharpe Ratio, Max Drawdown, etc.)
-- ✅ **Strategie-Optimierung** durch historische Daten
+### Backtesting
+- **Umfassendes Backtesting-Framework**
+- **240+ Test-Trades** mit realistischen Metriken
+- **Performance-Analyse** (Sharpe Ratio, Max Drawdown, etc.)
+- **Strategie-Optimierung** durch historische Daten
 
-### 📱 Dashboard & Monitoring
-- ✅ **React-basiertes Dashboard** mit 6 Hauptbereichen
-- ✅ **Real-time Updates** über WebSocket
-- ✅ **Portfolio-Übersicht** mit P&L-Tracking
-- ✅ **Trading-Historie** und Signal-Visualisierung
-- ✅ **System-Health-Monitoring**
+### Dashboard & Monitoring
+- **React-basiertes Dashboard** mit 6 Hauptbereichen
+- **Real-time Updates** über WebSocket
+- **Portfolio-Übersicht** mit P&L-Tracking
+- **Trading-Historie** und Signal-Visualisierung
+- **System-Health-Monitoring**
 
-### 🔒 Sicherheit
-- ✅ **95.5/100 Sicherheitsbewertung** erreicht
-- ✅ **API-Key-Verschlüsselung**
-- ✅ **Rate-Limiting** für API-Zugriffe
-- ✅ **Audit-Logging** für alle Transaktionen
+### Sicherheit
+- **95.5/100 Sicherheitsbewertung** erreicht
+- **API-Key-Verschlüsselung**
+- **Rate-Limiting** für API-Zugriffe
+- **Audit-Logging** für alle Transaktionen
 
 ---
 
-## 🛠️ Technologie-Stack
+## ️ Technologie-Stack
 
 ### Backend (Python)
 ```
 Python 3.11+
-├── Flask 2.3.3          # REST API
-├── SQLAlchemy           # ORM & Database
-├── Pandas               # Datenanalyse
-├── NumPy                # Numerische Berechnungen
-├── scikit-learn         # Machine Learning
-├── NLTK                 # Natural Language Processing
-├── Tweepy               # Twitter API
-├── PRAW                 # Reddit API
-├── yfinance             # Yahoo Finance API
-└── ccxt                 # Crypto Exchange Integration
+ Flask 2.3.3 # REST API
+ SQLAlchemy # ORM & Database
+ Pandas # Datenanalyse
+ NumPy # Numerische Berechnungen
+ scikit-learn # Machine Learning
+ NLTK # Natural Language Processing
+ Tweepy # Twitter API
+ PRAW # Reddit API
+ yfinance # Yahoo Finance API
+ ccxt # Crypto Exchange Integration
 ```
 
 ### Frontend (React)
 ```
 React 18.0+
-├── Vite                 # Build Tool
-├── Chart.js             # Datenvisualisierung
-├── Axios                # HTTP Client
-├── React Router         # Navigation
-└── TailwindCSS          # Styling
+ Vite # Build Tool
+ Chart.js # Datenvisualisierung
+ Axios # HTTP Client
+ React Router # Navigation
+ TailwindCSS # Styling
 ```
 
 ### DevOps & Infrastructure
 ```
-├── Docker               # Containerisierung
-├── docker-compose       # Multi-Container Orchestration
-├── nginx                # Reverse Proxy
-├── SQLite/PostgreSQL    # Datenbank
-└── GitHub Actions       # CI/CD (optional)
+ Docker # Containerisierung
+ docker-compose # Multi-Container Orchestration
+ nginx # Reverse Proxy
+ SQLite/PostgreSQL # Datenbank
+ GitHub Actions # CI/CD (optional)
 ```
 
 ---
 
-## 📁 Projektstruktur
+## Projektstruktur
 
 ```
 automated-trading-system/
-├── backend/                    # Python Trading-System
-│   ├── api/                   # Flask REST-API
-│   │   ├── __init__.py
-│   │   ├── routes.py
-│   │   └── websocket.py
-│   ├── data_collector.py      # Datensammlung
-│   ├── sentiment_analyzer.py  # KI Sentiment-Analyse
-│   ├── signal_generator.py    # Trading-Signal-Generierung
-│   ├── risk_manager.py        # Risikomanagement
-│   ├── kill_switch.py         # Notfall-Abschaltung
-│   ├── backtesting_engine.py  # Backtesting-Framework
-│   ├── broker_integration.py  # Broker-Anbindung
-│   ├── config.py              # Konfiguration
-│   └── requirements.txt       # Python-Dependencies
-│
-├── frontend/                   # React Dashboard
-│   ├── src/
-│   │   ├── components/        # React-Komponenten
-│   │   ├── pages/            # Seiten
-│   │   ├── services/         # API-Services
-│   │   └── App.jsx           # Haupt-App
-│   ├── package.json
-│   └── vite.config.js
-│
-├── docs/                       # Dokumentation
-│   ├── TRADING_SYSTEM_DOCUMENTATION.md  # 50+ Seiten
-│   ├── API_REFERENCE.md
-│   ├── DEPLOYMENT_SUMMARY.md
-│   └── SECURITY.md
-│
-├── scripts/                    # Wartungs-Scripts
-│   ├── health_check.sh
-│   ├── backup.sh
-│   └── security_monitor.sh
-│
-├── config/                     # Konfigurationsdateien
-├── data/                       # Datenbank und Logs
-├── logs/                       # System-Logs
-├── docker-compose.yml          # Docker-Deployment
-├── Dockerfile                  # Container-Konfiguration
-├── nginx.conf                  # Reverse-Proxy-Config
-└── README.md                   # Diese Datei
+ backend/ # Python Trading-System
+ api/ # Flask REST-API
+ __init__.py
+ routes.py
+ websocket.py
+ data_collector.py # Datensammlung
+ sentiment_analyzer.py # KI Sentiment-Analyse
+ signal_generator.py # Trading-Signal-Generierung
+ risk_manager.py # Risikomanagement
+ kill_switch.py # Notfall-Abschaltung
+ backtesting_engine.py # Backtesting-Framework
+ broker_integration.py # Broker-Anbindung
+ config.py # Konfiguration
+ requirements.txt # Python-Dependencies
+
+ frontend/ # React Dashboard
+ src/
+ components/ # React-Komponenten
+ pages/ # Seiten
+ services/ # API-Services
+ App.jsx # Haupt-App
+ package.json
+ vite.config.js
+
+ docs/ # Dokumentation
+ TRADING_SYSTEM_DOCUMENTATION.md # 50+ Seiten
+ API_REFERENCE.md
+ DEPLOYMENT_SUMMARY.md
+ SECURITY.md
+
+ scripts/ # Wartungs-Scripts
+ health_check.sh
+ backup.sh
+ security_monitor.sh
+
+ config/ # Konfigurationsdateien
+ data/ # Datenbank und Logs
+ logs/ # System-Logs
+ docker-compose.yml # Docker-Deployment
+ Dockerfile # Container-Konfiguration
+ nginx.conf # Reverse-Proxy-Config
+ README.md # Diese Datei
 ```
 
 ---
 
-## 🚀 Installation & Deployment
+## Installation & Deployment
 
 ### Option 1: Docker (Empfohlen)
 
@@ -199,7 +199,7 @@ open http://localhost:5174
 
 ---
 
-## 📊 System-Performance
+## System-Performance
 
 ### Backtesting-Ergebnisse
 
@@ -224,7 +224,7 @@ open http://localhost:5174
 
 ---
 
-## 🔧 Konfiguration
+## Konfiguration
 
 ### Erforderliche API-Keys
 
@@ -253,7 +253,7 @@ TRADING_CONFIG = {
 
 ---
 
-## 📈 Dashboard-Features
+## Dashboard-Features
 
 ### 1. Portfolio-Übersicht
 - Aktueller Portfolio-Wert
@@ -289,23 +289,23 @@ TRADING_CONFIG = {
 
 ---
 
-## 🛡️ Sicherheit & Best Practices
+## ️ Sicherheit & Best Practices
 
 ### Implementierte Sicherheitsmaßnahmen
 
-- ✅ **API-Key-Verschlüsselung** mit Fernet
-- ✅ **Rate-Limiting** für alle API-Endpunkte
-- ✅ **Input-Validierung** gegen Injection-Angriffe
-- ✅ **HTTPS-only** in Produktion
-- ✅ **Audit-Logging** für alle Transaktionen
-- ✅ **Kill-Switch** bei Anomalien
-- ✅ **Backup-Strategie** für Datenbank
+- **API-Key-Verschlüsselung** mit Fernet
+- **Rate-Limiting** für alle API-Endpunkte
+- **Input-Validierung** gegen Injection-Angriffe
+- **HTTPS-only** in Produktion
+- **Audit-Logging** für alle Transaktionen
+- **Kill-Switch** bei Anomalien
+- **Backup-Strategie** für Datenbank
 
 ### Sicherheitsscore: 95.5/100
 
 ---
 
-## 📚 Dokumentation
+## Dokumentation
 
 Die vollständige Dokumentation umfasst über **50 Seiten** und beinhaltet:
 
@@ -316,11 +316,11 @@ Die vollständige Dokumentation umfasst über **50 Seiten** und beinhaltet:
 - **Backtesting-Anleitung**
 - **Troubleshooting-Guide**
 
-📖 [Vollständige Dokumentation](./docs/TRADING_SYSTEM_DOCUMENTATION.md)
+ [Vollständige Dokumentation](./docs/TRADING_SYSTEM_DOCUMENTATION.md)
 
 ---
 
-## 🎓 Lernziele & Kompetenzen
+## Lernziele & Kompetenzen
 
 Dieses Projekt demonstriert:
 
@@ -335,40 +335,40 @@ Dieses Projekt demonstriert:
 
 ---
 
-## ⚠️ Disclaimer
+## ️ Disclaimer
 
 **Dieses Projekt dient ausschließlich zu Bildungs- und Demonstrationszwecken.**
 
-- ❌ Keine Finanzberatung
-- ❌ Keine Garantie für Gewinne
-- ❌ Trading birgt erhebliche Risiken
-- ✅ Verwende nur Geld, das du bereit bist zu verlieren
-- ✅ Teste ausgiebig im Paper-Trading-Modus
+- Keine Finanzberatung
+- Keine Garantie für Gewinne
+- Trading birgt erhebliche Risiken
+- Verwende nur Geld, das du bereit bist zu verlieren
+- Teste ausgiebig im Paper-Trading-Modus
 
 ---
 
-## 🤝 Beiträge
+## Beiträge
 
 Beiträge sind willkommen! Bitte erstelle einen Pull Request oder öffne ein Issue.
 
 ---
 
-## 👨‍💻 Entwickler
+## ‍ Entwickler
 
 **Tobias Heiko Buß**
-- 📧 Email: tobias.buss.dev@gmail.com
-- 🐙 GitHub: [@tibo47-161](https://github.com/tibo47-161)
-- 📍 Hamburg, Deutschland
+- Email: tobias.buss.dev@gmail.com
+- GitHub: [@tibo47-161](https://github.com/tibo47-161)
+- Hamburg, Deutschland
 
 ---
 
-## 📄 Lizenz
+## Lizenz
 
 Dieses Projekt ist unter der MIT-Lizenz lizenziert.
 
 ---
 
-## 🙏 Danksagung
+## Danksagung
 
 - **Open-Source-Community** für die großartigen Libraries
 - **GFN Hamburg** für die Ausbildung
@@ -376,6 +376,6 @@ Dieses Projekt ist unter der MIT-Lizenz lizenziert.
 
 ---
 
-⭐ **Wenn dir dieses Projekt gefällt, lass gerne einen Stern da!**
+ **Wenn dir dieses Projekt gefällt, lass gerne einen Stern da!**
 
-*Entwickelt mit ❤️ und Python in Hamburg*
+*Entwickelt mit ️ und Python in Hamburg*

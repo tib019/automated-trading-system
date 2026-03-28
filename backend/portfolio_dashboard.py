@@ -303,7 +303,7 @@ class PortfolioDashboard:
 def main():
     """Test des Portfolio-Dashboards"""
     print("=" * 80)
-    print("📊 PORTFOLIO DASHBOARD TEST")
+ print(" PORTFOLIO DASHBOARD TEST")
     print("=" * 80)
     
     dashboard = PortfolioDashboard()
@@ -313,7 +313,7 @@ def main():
     print(report)
     
     # Erstelle Charts
-    print("\n📈 Creating portfolio charts...")
+ print("\n Creating portfolio charts...")
     
     try:
         portfolio_chart = dashboard.create_portfolio_chart(days=1)
@@ -331,7 +331,7 @@ def main():
     export_path = dashboard.export_portfolio_data()
     print(f"Portfolio data exported: {export_path}")
     
-    print("\n✅ Dashboard test completed!")
+ print("\n Dashboard test completed!")
 
 if __name__ == "__main__":
     main()

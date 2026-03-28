@@ -137,7 +137,7 @@ class BacktestingEngine:
                     strategy_name: str = "Default Strategy") -> BacktestResult:
         """Führe Backtest für gegebene Symbole und Zeitraum durch"""
         
-        print(f"🔄 Starting backtest: {strategy_name}")
+ print(f" Starting backtest: {strategy_name}")
         print(f"   Period: {start_date.date()} to {end_date.date()}")
         print(f"   Symbols: {', '.join(symbols)}")
         print(f"   Initial Capital: ${self.initial_capital:,.2f}")
@@ -176,7 +176,7 @@ class BacktestingEngine:
         # Berechne finale Metriken
         result = self._calculate_backtest_metrics(portfolio, strategy_name, start_date, end_date)
         
-        print(f"✅ Backtest completed!")
+ print(f" Backtest completed!")
         print(f"   Final Capital: ${result.final_capital:,.2f}")
         print(f"   Total Return: {result.total_return_percent:+.2f}%")
         print(f"   Total Trades: {result.total_trades}")
@@ -524,7 +524,7 @@ class BacktestingEngine:
 def main():
     """Test des Backtesting-Frameworks"""
     print("=" * 80)
-    print("📊 BACKTESTING ENGINE TEST")
+ print(" BACKTESTING ENGINE TEST")
     print("=" * 80)
     
     engine = BacktestingEngine()
@@ -544,7 +544,7 @@ def main():
         )
         
         # Zeige Ergebnisse
-        print(f"\n📈 BACKTEST RESULTS:")
+ print(f"\n BACKTEST RESULTS:")
         print(f"   Strategy: {result.strategy_name}")
         print(f"   Period: {result.start_date.date()} to {result.end_date.date()}")
         print(f"   Initial Capital: ${result.initial_capital:,.2f}")
@@ -562,10 +562,10 @@ def main():
         with open(results_path, 'w') as f:
             json.dump(asdict(result), f, indent=2, default=str)
         
-        print(f"\n💾 Results saved to: {results_path}")
+ print(f"\n Results saved to: {results_path}")
         
     except Exception as e:
-        print(f"❌ Backtest failed: {e}")
+ print(f" Backtest failed: {e}")
         print("This is expected if no historical data is available")
 
 if __name__ == "__main__":

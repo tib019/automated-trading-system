@@ -113,13 +113,13 @@ def test_with_lower_thresholds():
         signal = generator.generate_signal(symbol)
         
         if signal:
-            print(f"✅ SIGNAL GENERATED!")
+ print(f" SIGNAL GENERATED!")
             print(f"   Type: {signal.signal_type.value} ({signal.strength.value})")
             print(f"   Entry: ${signal.entry_price}")
             print(f"   Confidence: {signal.confidence:.3f}")
             print(f"   Reasoning: {signal.reasoning}")
         else:
-            print("❌ Still no signal generated")
+ print(" Still no signal generated")
     
     # Restore original threshold
     config.SIGNAL_CONFIG['min_sentiment_score'] = original_min_sentiment

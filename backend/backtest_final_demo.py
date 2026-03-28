@@ -182,7 +182,7 @@ class EnhancedBacktestDemo:
         """Führe erweiterten Backtest mit garantierten Trades durch"""
         
         print("=" * 80)
-        print("🚀 ENHANCED BACKTESTING DEMO - GUARANTEED TRADES")
+ print(" ENHANCED BACKTESTING DEMO - GUARANTEED TRADES")
         print("=" * 80)
         
         # Demo-Parameter
@@ -348,7 +348,7 @@ def main():
     result, portfolio_data = demo.run_enhanced_backtest()
     
     # Zeige detaillierte Ergebnisse
-    print(f"\n🎯 ENHANCED BACKTEST RESULTS:")
+ print(f"\n ENHANCED BACKTEST RESULTS:")
     print(f"   Strategy: {result.strategy_name}")
     print(f"   Total Return: ${result.total_return:+,.2f} ({result.total_return_percent:+.2f}%)")
     print(f"   Max Drawdown: {result.max_drawdown_percent:.2f}%")
@@ -359,7 +359,7 @@ def main():
     
     # Trade-Details
     if portfolio_data['trades']:
-        print(f"\n📋 TRADE DETAILS:")
+ print(f"\n TRADE DETAILS:")
         for i, trade in enumerate(portfolio_data['trades'][:5], 1):  # Zeige erste 5 Trades
             print(f"   {i}. {trade.symbol} {trade.signal_type.value}: ${trade.pnl:+.2f} ({trade.pnl_percent:+.1f}%) - {trade.exit_reason}")
         
@@ -367,7 +367,7 @@ def main():
             print(f"   ... and {len(portfolio_data['trades']) - 5} more trades")
     
     # Erstelle Visualisierung
-    print(f"\n📊 Creating enhanced visualization...")
+ print(f"\n Creating enhanced visualization...")
     chart_path = demo.create_enhanced_visualization(result, portfolio_data)
     print(f"Enhanced chart saved: {chart_path}")
     
@@ -389,7 +389,7 @@ def main():
         }, f, indent=2, default=str)
     
     print(f"Enhanced results saved: {results_path}")
-    print(f"\n✅ ENHANCED BACKTESTING DEMO COMPLETED!")
+ print(f"\n ENHANCED BACKTESTING DEMO COMPLETED!")
 
 if __name__ == "__main__":
     main()

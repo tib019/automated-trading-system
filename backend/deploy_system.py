@@ -489,10 +489,10 @@ def main():
     deployer.save_deployment_log()
     
     if success:
-        print("\n🎉 Trading System is ready for deployment!")
-        print("📖 Read DEPLOYMENT_SUMMARY.md for detailed instructions")
+ print("\n Trading System is ready for deployment!")
+ print(" Read DEPLOYMENT_SUMMARY.md for detailed instructions")
     else:
-        print("\n❌ Deployment failed. Check the logs for details.")
+ print("\n Deployment failed. Check the logs for details.")
     
     return success
 

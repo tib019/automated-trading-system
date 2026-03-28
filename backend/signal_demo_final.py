@@ -184,7 +184,7 @@ def run_final_demo():
     """Führe finale Demo mit verschiedenen Marktszenarien aus"""
     
     print("=" * 90)
-    print("🎯 TRADING SYSTEM - FINAL SIGNAL GENERATION DEMO")
+ print(" TRADING SYSTEM - FINAL SIGNAL GENERATION DEMO")
     print("=" * 90)
     print("Demonstrating signal generation under various market conditions")
     print()
@@ -194,12 +194,12 @@ def run_final_demo():
     
     for i, condition in enumerate(scenarios, 1):
         print(f"{'='*20} SCENARIO {i}: {condition.symbol} {'='*20}")
-        print(f"📊 Market Condition: {condition.scenario_description}")
-        print(f"💰 Current Price: ${condition.current_price:,.2f}")
-        print(f"😊 Sentiment Score: {condition.sentiment_score:+.2f}")
-        print(f"📈 Technical Score: {condition.technical_score:+.2f}")
-        print(f"📢 Social Volume: {condition.volume_score} mentions")
-        print(f"📊 RSI: {condition.rsi:.1f}")
+ print(f" Market Condition: {condition.scenario_description}")
+ print(f" Current Price: ${condition.current_price:,.2f}")
+ print(f" Sentiment Score: {condition.sentiment_score:+.2f}")
+ print(f" Technical Score: {condition.technical_score:+.2f}")
+ print(f" Social Volume: {condition.volume_score} mentions")
+ print(f" RSI: {condition.rsi:.1f}")
         print()
         
         # Generiere Signal
@@ -212,7 +212,7 @@ def run_final_demo():
             action_emoji = "🟢" if signal.signal_type == SignalType.BUY else "🔴"
             strength_emoji = {"WEAK": "⭐", "MODERATE": "⭐⭐", "STRONG": "⭐⭐⭐"}[signal.strength.value]
             
-            print(f"🎯 {action_emoji} SIGNAL GENERATED {strength_emoji}")
+ print(f" {action_emoji} SIGNAL GENERATED {strength_emoji}")
             print(f"   Action: {signal.signal_type.value} ({signal.strength.value})")
             print(f"   Entry: ${signal.entry_price:,.2f}")
             print(f"   Stop Loss: ${signal.stop_loss:,.2f} ({((signal.stop_loss/signal.entry_price-1)*100):+.1f}%)")
@@ -222,13 +222,13 @@ def run_final_demo():
             print(f"   Risk/Reward: 1:{signal.risk_reward_ratio:.2f}")
             print(f"   Reasoning: {signal.reasoning}")
         else:
-            print("❌ No signal generated (HOLD recommendation)")
+ print(" No signal generated (HOLD recommendation)")
         
         print()
     
     # Trading-Kommandos im gewünschten Format
     print("=" * 90)
-    print("📋 TRADING COMMANDS (Your Requested Format)")
+ print(" TRADING COMMANDS (Your Requested Format)")
     print("=" * 90)
     
     if generated_signals:
@@ -236,11 +236,11 @@ def run_final_demo():
             sl_percent = abs((signal.entry_price - signal.stop_loss) / signal.entry_price * 100)
             tp_percent = abs((signal.take_profit - signal.entry_price) / signal.entry_price * 100)
             
-            print(f"📋 {signal.symbol} | {signal.signal_type.value} | Entry: {signal.entry_price} | SL: -{sl_percent:.1f}% | TP: +{tp_percent:.1f}% | Begründung: {signal.reasoning}")
+ print(f" {signal.symbol} | {signal.signal_type.value} | Entry: {signal.entry_price} | SL: -{sl_percent:.1f}% | TP: +{tp_percent:.1f}% | Begründung: {signal.reasoning}")
     
     # Portfolio-Übersicht
     print(f"\n{'='*90}")
-    print("💼 PORTFOLIO ALLOCATION SUMMARY")
+ print(" PORTFOLIO ALLOCATION SUMMARY")
     print("=" * 90)
     
     total_allocation = sum(signal.position_size_percent for signal in generated_signals)
@@ -263,11 +263,11 @@ def run_final_demo():
         print(f"Average Risk/Reward: 1:{avg_risk_reward:.2f}")
     
     print(f"\n{'='*90}")
-    print("✅ DEMO COMPLETED SUCCESSFULLY")
+ print(" DEMO COMPLETED SUCCESSFULLY")
     print("=" * 90)
     print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Signals Generated: {len(generated_signals)}")
-    print(f"System Status: 🟢 Fully Operational")
+ print(f"System Status: Fully Operational")
     
     return generated_signals
 
