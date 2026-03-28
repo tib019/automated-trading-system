@@ -295,13 +295,13 @@ def internal_error(error):
     }), 500
 
 if __name__ == '__main__':
- print(" Starting Trading System API...")
- print(" API Base: http://localhost:5000")
- print(" Health Check: http://localhost:5000/api/health")
- print(" System Status: http://localhost:5000/api/status")
- print(" Portfolio: http://localhost:5000/api/portfolio/status")
- print(" Orders: http://localhost:5000/api/orders")
- print(" Signals: http://localhost:5000/api/signals/recommendations")
- print(" Security: http://localhost:5000/api/security/events")
+ print("Starting Trading System API...")
+ print("API Base: http://localhost:5000")
+ print("Health Check: http://localhost:5000/api/health")
+ print("System Status: http://localhost:5000/api/status")
+ print("Portfolio: http://localhost:5000/api/portfolio/status")
+ print("Orders: http://localhost:5000/api/orders")
+ print("Signals: http://localhost:5000/api/signals/recommendations")
+ print("Security: http://localhost:5000/api/security/events")
     app.run(host='0.0.0.0', port=5001, debug=True)
 

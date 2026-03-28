@@ -524,7 +524,7 @@ class BacktestingEngine:
 def main():
     """Test des Backtesting-Frameworks"""
     print("=" * 80)
- print(" BACKTESTING ENGINE TEST")
+ print("BACKTESTING ENGINE TEST")
     print("=" * 80)
     
     engine = BacktestingEngine()

@@ -89,7 +89,7 @@ def demo_with_realistic_thresholds():
  print(f" {best_signal.symbol} | {best_signal.signal_type.value} | Entry: {best_signal.entry_price} | SL: -{abs((best_signal.entry_price-best_signal.stop_loss)/best_signal.entry_price*100):.1f}% | TP: +{abs((best_signal.take_profit-best_signal.entry_price)/best_signal.entry_price*100):.1f}% | Grund: {best_signal.reasoning}")
         
     else:
- print(" No signals generated. Market conditions may be too neutral or volatile.")
+ print("No signals generated. Market conditions may be too neutral or volatile.")
     
     # Restore original configuration
     config.SIGNAL_CONFIG['min_sentiment_score'] = original_min_sentiment

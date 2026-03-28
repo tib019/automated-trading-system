@@ -182,7 +182,7 @@ class EnhancedBacktestDemo:
         """Führe erweiterten Backtest mit garantierten Trades durch"""
         
         print("=" * 80)
- print(" ENHANCED BACKTESTING DEMO - GUARANTEED TRADES")
+ print("ENHANCED BACKTESTING DEMO - GUARANTEED TRADES")
         print("=" * 80)
         
         # Demo-Parameter

@@ -79,7 +79,7 @@ class BacktestDemo:
         """Führe Demo-Backtest mit synthetischen Daten durch"""
         
         print("=" * 80)
- print(" BACKTESTING DEMO - SYNTHETIC DATA")
+ print("BACKTESTING DEMO - SYNTHETIC DATA")
         print("=" * 80)
         
         # Demo-Parameter

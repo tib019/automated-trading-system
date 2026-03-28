@@ -15,7 +15,7 @@ def test_webhook_server():
     base_url = "http://localhost:5000"
     
     print("=" * 80)
- print(" WEBHOOK SERVER TEST")
+ print("WEBHOOK SERVER TEST")
     print("=" * 80)
     
     # Test 1: Health Check
@@ -30,7 +30,7 @@ def test_webhook_server():
  print(f" Health Check failed: {response.status_code}")
     except requests.exceptions.RequestException as e:
  print(f" Health Check error: {e}")
- print(" Make sure the webhook server is running!")
+ print("Make sure the webhook server is running!")
         return
     
     # Test 2: Test Webhook

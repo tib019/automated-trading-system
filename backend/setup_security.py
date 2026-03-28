@@ -10,7 +10,7 @@ import sys
 
 def setup_environment_variables():
     """Setup required environment variables"""
- print(" Setting up environment variables...")
+ print("Setting up environment variables...")
     
     # Generate secure random values
     master_password = secrets.token_urlsafe(32)
@@ -47,13 +47,13 @@ export WEBHOOK_SECRET="{webhook_secret}"
     os.chmod(env_file, 0o600)
     
  print(f" Environment file created: {env_file}")
- print(" To load variables, run: source /home/ubuntu/trading_system/.env")
+ print("To load variables, run: source /home/ubuntu/trading_system/.env")
     
     return master_password, webhook_secret
 
 def fix_file_permissions():
     """Fix file permissions for security"""
- print(" Fixing file permissions...")
+ print("Fixing file permissions...")
     
     files_to_secure = [
         ('/home/ubuntu/trading_system/.master_key', 0o600),
@@ -72,7 +72,7 @@ def fix_file_permissions():
 
 def create_security_policy():
     """Create security policy document"""
- print(" Creating security policy...")
+ print("Creating security policy...")
     
     policy_content = """# Trading System Security Policy
 
@@ -125,7 +125,7 @@ def create_security_policy():
 
 def create_security_checklist():
     """Create security checklist for operators"""
- print(" Creating security checklist...")
+ print("Creating security checklist...")
     
     checklist_content = """# Trading System Security Checklist
 
@@ -175,7 +175,7 @@ def create_security_checklist():
 
 def setup_automated_security():
     """Setup automated security monitoring"""
- print(" Setting up automated security...")
+ print("Setting up automated security...")
     
     # Create security monitoring script
     monitor_script = """#!/bin/bash
@@ -211,7 +211,7 @@ echo "[$DATE] Security monitor completed" >> $LOG_FILE
 
 def main():
     """Main setup function"""
- print(" Trading System Security Setup")
+ print("Trading System Security Setup")
     print("=" * 40)
     
     # Setup environment variables
@@ -228,7 +228,7 @@ def main():
     setup_automated_security()
     
     print("\n" + "=" * 40)
- print(" SECURITY SETUP COMPLETED")
+ print("SECURITY SETUP COMPLETED")
     print("=" * 40)
     
  print("\n Next Steps:")

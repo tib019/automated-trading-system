@@ -13,7 +13,7 @@ def simulate_market_crash_scenario():
     """Simuliere Markt-Crash-Szenario für Kill-Switch-Test"""
     
     print("=" * 80)
- print(" KILL-SWITCH DEMO - MARKET CRASH SIMULATION")
+ print("KILL-SWITCH DEMO - MARKET CRASH SIMULATION")
     print("=" * 80)
     
     risk_manager = RiskManager()
@@ -21,7 +21,7 @@ def simulate_market_crash_scenario():
     dashboard = PortfolioDashboard()
     
     # Schritt 1: Öffne mehrere Positionen
- print(" STEP 1: Opening multiple positions...")
+ print("STEP 1: Opening multiple positions...")
     
     test_signals = [
         TradingSignal(
@@ -166,7 +166,7 @@ def simulate_market_crash_scenario():
             pnl_percent = (pos.unrealized_pnl / pos.position_size_usd) * 100
             print(f"  {pos.symbol}: ${pos.unrealized_pnl:+,.2f} ({pnl_percent:+.1f}%)")
     else:
-        print("  All positions closed by Kill-Switch")
+        print("All positions closed by Kill-Switch")
     
     # Schritt 6: Generiere finalen Bericht
  print(f"\n STEP 6: Generating final report...")
@@ -194,7 +194,7 @@ def test_manual_kill_switch():
     """Teste manuellen Kill-Switch"""
     
     print(f"\n{'='*80}")
- print(" MANUAL KILL-SWITCH TEST")
+ print("MANUAL KILL-SWITCH TEST")
     print("=" * 80)
     
     risk_manager = RiskManager()
@@ -218,7 +218,7 @@ def test_manual_kill_switch():
 def main():
     """Hauptfunktion für Kill-Switch-Demo"""
     
- print(" TRADING SYSTEM KILL-SWITCH DEMONSTRATION")
+ print("TRADING SYSTEM KILL-SWITCH DEMONSTRATION")
     print("This demo shows how the system protects against major losses")
     print()
     
@@ -229,7 +229,7 @@ def main():
     test_manual_kill_switch()
     
     print(f"\n{'='*80}")
- print(" KILL-SWITCH DEMO COMPLETED")
+ print("KILL-SWITCH DEMO COMPLETED")
     print("=" * 80)
     print("Key Features Demonstrated:")
     print("• Automatic position opening with risk validation")

@@ -89,7 +89,7 @@ def debug_signal_generation():
             print(f"   Signal Decision: {signal_type}")
             print(f"   Reason: Score={combined_score:.3f} (threshold=±{min_sentiment}), Confidence={combined_confidence:.3f} (min=0.5)")
         else:
-            print("   No data available for combined calculation")
+            print("No data available for combined calculation")
         
         print("-" * 60)
 
@@ -119,7 +119,7 @@ def test_with_lower_thresholds():
             print(f"   Confidence: {signal.confidence:.3f}")
             print(f"   Reasoning: {signal.reasoning}")
         else:
- print(" Still no signal generated")
+ print("Still no signal generated")
     
     # Restore original threshold
     config.SIGNAL_CONFIG['min_sentiment_score'] = original_min_sentiment

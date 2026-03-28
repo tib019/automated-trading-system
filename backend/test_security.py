@@ -307,7 +307,7 @@ def run_security_audit():
         stat_info = os.stat(key_file)
         permissions = oct(stat_info.st_mode)[-3:]
         if permissions == '600':
- print(" Master key file has correct permissions (600)")
+ print("Master key file has correct permissions (600)")
         else:
  print(f"️ Master key file permissions: {permissions} (should be 600)")
     
@@ -335,7 +335,7 @@ def run_security_audit():
  print(f"️ Input sanitization failed for: {dangerous_input[:50]}...")
     
     if all_safe:
- print(" Input sanitization working correctly")
+ print("Input sanitization working correctly")
     
     # Test encryption strength
     test_data = "sensitive_data_12345"
@@ -343,11 +343,11 @@ def run_security_audit():
     encrypted2 = security.encrypt_data(test_data)
     
     if encrypted1 != encrypted2:
- print(" Encryption uses proper randomization (different outputs for same input)")
+ print("Encryption uses proper randomization (different outputs for same input)")
     else:
  print("️ Encryption may not be using proper randomization")
     
- print(" Security audit completed")
+ print("Security audit completed")
 
 
 if __name__ == "__main__":
@@ -383,9 +383,9 @@ if __name__ == "__main__":
     print("\n" + "="*60)
     print("SECURITY TESTS COMPLETED")
     if result.wasSuccessful():
- print(" ALL TESTS PASSED")
+ print("ALL TESTS PASSED")
     else:
- print(" SOME TESTS FAILED")
+ print("SOME TESTS FAILED")
         print(f"Failures: {len(result.failures)}")
         print(f"Errors: {len(result.errors)}")
     print("="*60)

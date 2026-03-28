@@ -184,7 +184,7 @@ def run_final_demo():
     """Führe finale Demo mit verschiedenen Marktszenarien aus"""
     
     print("=" * 90)
- print(" TRADING SYSTEM - FINAL SIGNAL GENERATION DEMO")
+ print("TRADING SYSTEM - FINAL SIGNAL GENERATION DEMO")
     print("=" * 90)
     print("Demonstrating signal generation under various market conditions")
     print()
@@ -222,13 +222,13 @@ def run_final_demo():
             print(f"   Risk/Reward: 1:{signal.risk_reward_ratio:.2f}")
             print(f"   Reasoning: {signal.reasoning}")
         else:
- print(" No signal generated (HOLD recommendation)")
+ print("No signal generated (HOLD recommendation)")
         
         print()
     
     # Trading-Kommandos im gewünschten Format
     print("=" * 90)
- print(" TRADING COMMANDS (Your Requested Format)")
+ print("TRADING COMMANDS (Your Requested Format)")
     print("=" * 90)
     
     if generated_signals:
@@ -240,7 +240,7 @@ def run_final_demo():
     
     # Portfolio-Übersicht
     print(f"\n{'='*90}")
- print(" PORTFOLIO ALLOCATION SUMMARY")
+ print("PORTFOLIO ALLOCATION SUMMARY")
     print("=" * 90)
     
     total_allocation = sum(signal.position_size_percent for signal in generated_signals)
@@ -263,7 +263,7 @@ def run_final_demo():
         print(f"Average Risk/Reward: 1:{avg_risk_reward:.2f}")
     
     print(f"\n{'='*90}")
- print(" DEMO COMPLETED SUCCESSFULLY")
+ print("DEMO COMPLETED SUCCESSFULLY")
     print("=" * 90)
     print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Signals Generated: {len(generated_signals)}")

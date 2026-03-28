@@ -630,13 +630,13 @@ class OrderManager:
 def main():
     """Test des Order-Management-Systems"""
     print("=" * 80)
- print(" ORDER MANAGEMENT SYSTEM TEST")
+ print("ORDER MANAGEMENT SYSTEM TEST")
     print("=" * 80)
     
     order_manager = OrderManager()
     
     # Verbinde mit Brokern
- print(" Connecting to brokers...")
+ print("Connecting to brokers...")
     connection_results = order_manager.connect_brokers()
     
     for broker_type, connected in connection_results.items():
@@ -707,7 +707,7 @@ def main():
             status_emoji = "✅" if order.status == OrderStatus.FILLED else "⏳" if order.status == OrderStatus.SUBMITTED else "❌"
             print(f"   {status_emoji} {order.symbol} {order.side.value} {order.quantity:.6f} @ ${order.price:.2f} - {order.status.value}")
     else:
-        print("   No orders found")
+        print("No orders found")
     
  print(f"\n Order Management System test completed!")
 

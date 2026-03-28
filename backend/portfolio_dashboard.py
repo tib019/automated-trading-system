@@ -303,7 +303,7 @@ class PortfolioDashboard:
 def main():
     """Test des Portfolio-Dashboards"""
     print("=" * 80)
- print(" PORTFOLIO DASHBOARD TEST")
+ print("PORTFOLIO DASHBOARD TEST")
     print("=" * 80)
     
     dashboard = PortfolioDashboard()

@@ -490,7 +490,7 @@ def main():
     
     if success:
  print("\n Trading System is ready for deployment!")
- print(" Read DEPLOYMENT_SUMMARY.md for detailed instructions")
+ print("Read DEPLOYMENT_SUMMARY.md for detailed instructions")
     else:
  print("\n Deployment failed. Check the logs for details.")
     
