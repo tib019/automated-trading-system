@@ -37,7 +37,7 @@ Das **Automated Trading System** ist eine umfassende Full-Stack-Anwendung, die m
 - **Historische Datenanalyse** für Backtesting
 - **928+ Marktdaten-Punkte** gesammelt und verarbeitet
 
-### ️ Risikomanagement
+### Risikomanagement
 - **Kill-Switch** für automatische Systemabschaltung bei Anomalien
 - **Portfolio-Schutz** mit Stop-Loss und Take-Profit
 - **Position-Sizing** basierend auf Risikotoleranz
@@ -70,7 +70,7 @@ Das **Automated Trading System** ist eine umfassende Full-Stack-Anwendung, die m
 
 ---
 
-## ️ Technologie-Stack
+## Technologie-Stack
 
 ### Backend (Python)
 ```
@@ -289,7 +289,7 @@ TRADING_CONFIG = {
 
 ---
 
-## ️ Sicherheit & Best Practices
+## Sicherheit & Best Practices
 
 ### Implementierte Sicherheitsmaßnahmen
 
@@ -335,7 +335,7 @@ Dieses Projekt demonstriert:
 
 ---
 
-## ️ Disclaimer
+## Disclaimer
 
 **Dieses Projekt dient ausschließlich zu Bildungs- und Demonstrationszwecken.**
 
@@ -353,7 +353,7 @@ Beiträge sind willkommen! Bitte erstelle einen Pull Request oder öffne ein Iss
 
 ---
 
-## ‍ Entwickler
+## Entwickler
 
 **Tobias Heiko Buß**
 - Email: tobias.buss.dev@gmail.com
@@ -378,4 +378,4 @@ Dieses Projekt ist unter der MIT-Lizenz lizenziert.
 
  **Wenn dir dieses Projekt gefällt, lass gerne einen Stern da!**
 
-*Entwickelt mit ️ und Python in Hamburg*
+*Entwickelt mit und Python in Hamburg*
