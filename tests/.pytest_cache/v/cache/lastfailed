@@ -1,0 +1,9 @@
+{
+  "test_risk_manager.py::TestRiskManagerValidateSignal::test_low_confidence_fails": true,
+  "test_risk_manager.py::TestRiskManagerValidateSignal::test_low_risk_reward_fails": true,
+  "test_risk_manager.py::TestRiskManagerValidateSignal::test_oversized_position_fails": true,
+  "test_risk_manager.py::TestRegressionRiskManager::test_exactly_at_min_confidence_passes": true,
+  "test_risk_manager.py::TestRegressionRiskManager::test_exactly_at_min_risk_reward_passes": true,
+  "test_risk_manager.py::TestRegressionRiskManager::test_zero_confidence_fails": true,
+  "test_risk_manager.py::TestRegressionRiskManager::test_negative_position_size_handled": true
+}
