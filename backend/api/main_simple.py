@@ -9,7 +9,7 @@ from src.models.user import db
 from src.routes.user import user_bp
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
-app.config['SECRET_KEY'] = 'trading_system_secret_key_change_in_production'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24).hex())
 
 # Enable CORS for all routes
 CORS(app, origins="*")

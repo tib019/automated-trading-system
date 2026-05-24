@@ -496,7 +496,10 @@ if __name__ == "__main__":
     
     # Test webhook signature
     payload = '{"test": "data"}'
-    secret_key = "webhook_secret"
+    secret_key = os.environ.get('WEBHOOK_SECRET', '')
+    if not secret_key:
+        import warnings
+        warnings.warn("WEBHOOK_SECRET environment variable is not set. Webhook signature verification will be insecure.", RuntimeWarning)
     signature = security.generate_webhook_signature(payload, secret_key)
     is_valid = security.validate_webhook_signature(payload, signature, secret_key)
     

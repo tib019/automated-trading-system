@@ -26,7 +26,7 @@ from order_manager import OrderManager
 from security_manager import SecurityManager
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
-app.config['SECRET_KEY'] = 'trading_system_secret_key_change_in_production'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24).hex())
 
 # Enable CORS for all routes
 CORS(app, origins="*")
