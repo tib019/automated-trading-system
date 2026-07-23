@@ -79,7 +79,7 @@ class BacktestDemo:
         """Führe Demo-Backtest mit synthetischen Daten durch"""
         
         print("=" * 80)
- print("BACKTESTING DEMO - SYNTHETIC DATA")
+        print("BACKTESTING DEMO - SYNTHETIC DATA")
         print("=" * 80)
         
         # Demo-Parameter
@@ -211,13 +211,13 @@ class BacktestDemo:
         
         report = []
         report.append("=" * 80)
-        report.append("📊 BACKTESTING DEMO - COMPREHENSIVE REPORT")
+        report.append("BACKTESTING DEMO - COMPREHENSIVE REPORT")
         report.append("=" * 80)
         report.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         report.append("")
         
         # Strategy Overview
-        report.append("🎯 STRATEGY OVERVIEW")
+        report.append("STRATEGY OVERVIEW")
         report.append("-" * 40)
         report.append(f"Strategy Name: {result.strategy_name}")
         report.append(f"Backtest Period: {result.start_date.date()} to {result.end_date.date()}")
@@ -225,7 +225,7 @@ class BacktestDemo:
         report.append("")
         
         # Performance Summary
-        report.append("💰 PERFORMANCE SUMMARY")
+        report.append("PERFORMANCE SUMMARY")
         report.append("-" * 40)
         report.append(f"Initial Capital: ${result.initial_capital:,.2f}")
         report.append(f"Final Capital: ${result.final_capital:,.2f}")
@@ -238,7 +238,7 @@ class BacktestDemo:
         report.append("")
         
         # Risk Metrics
-        report.append("🛡️ RISK METRICS")
+        report.append("RISK METRICS")
         report.append("-" * 40)
         report.append(f"Maximum Drawdown: ${result.max_drawdown:,.2f} ({result.max_drawdown_percent:.2f}%)")
         report.append(f"Volatility: {result.volatility:.2f}%")
@@ -248,7 +248,7 @@ class BacktestDemo:
         report.append("")
         
         # Trading Statistics
-        report.append("📈 TRADING STATISTICS")
+        report.append("TRADING STATISTICS")
         report.append("-" * 40)
         report.append(f"Total Trades: {result.total_trades}")
         report.append(f"Winning Trades: {result.winning_trades}")
@@ -265,64 +265,64 @@ class BacktestDemo:
         report.append("")
         
         # Strategy Assessment
-        report.append("🎯 STRATEGY ASSESSMENT")
+        report.append("STRATEGY ASSESSMENT")
         report.append("-" * 40)
         
         # Performance Rating
         if result.total_return_percent > 20:
-            performance_rating = "🟢 EXCELLENT"
+            performance_rating = "EXCELLENT"
         elif result.total_return_percent > 10:
-            performance_rating = "🟡 GOOD"
+            performance_rating = "GOOD"
         elif result.total_return_percent > 0:
-            performance_rating = "🟠 MODERATE"
+            performance_rating = "MODERATE"
         else:
-            performance_rating = "🔴 POOR"
+            performance_rating = "POOR"
         
         report.append(f"Performance Rating: {performance_rating}")
         
         # Risk Rating
         if result.max_drawdown_percent < 5:
-            risk_rating = "🟢 LOW RISK"
+            risk_rating = "LOW RISK"
         elif result.max_drawdown_percent < 15:
-            risk_rating = "🟡 MODERATE RISK"
+            risk_rating = "MODERATE RISK"
         elif result.max_drawdown_percent < 25:
-            risk_rating = "🟠 HIGH RISK"
+            risk_rating = "HIGH RISK"
         else:
-            risk_rating = "🔴 VERY HIGH RISK"
+            risk_rating = "VERY HIGH RISK"
         
         report.append(f"Risk Rating: {risk_rating}")
         
         # Sharpe Rating
         if result.sharpe_ratio > 2:
-            sharpe_rating = "🟢 EXCELLENT"
+            sharpe_rating = "EXCELLENT"
         elif result.sharpe_ratio > 1:
-            sharpe_rating = "🟡 GOOD"
+            sharpe_rating = "GOOD"
         elif result.sharpe_ratio > 0:
-            sharpe_rating = "🟠 ACCEPTABLE"
+            sharpe_rating = "ACCEPTABLE"
         else:
-            sharpe_rating = "🔴 POOR"
+            sharpe_rating = "POOR"
         
         report.append(f"Risk-Adjusted Return: {sharpe_rating}")
         report.append("")
         
         # Recommendations
-        report.append("💡 RECOMMENDATIONS")
+        report.append("RECOMMENDATIONS")
         report.append("-" * 40)
         
         if result.win_rate < 50:
-            report.append("• Consider tightening entry criteria to improve win rate")
+            report.append("Consider tightening entry criteria to improve win rate")
         
         if result.max_drawdown_percent > 20:
-            report.append("• Implement stricter risk management to reduce drawdown")
+            report.append("Implement stricter risk management to reduce drawdown")
         
         if result.profit_factor < 1.5:
-            report.append("• Optimize take-profit and stop-loss levels")
+            report.append("Optimize take-profit and stop-loss levels")
         
         if result.total_trades < 10:
-            report.append("• Strategy may need more trading opportunities")
+            report.append("Strategy may need more trading opportunities")
         
         if result.sharpe_ratio < 1:
-            report.append("• Focus on improving risk-adjusted returns")
+            report.append("Focus on improving risk-adjusted returns")
         
         report.append("")
         report.append("=" * 80)
@@ -338,12 +338,12 @@ def main():
     result = demo.run_demo_backtest()
     
     # Erstelle Visualisierung
- print(f"\n Creating backtest visualization...")
+    print(f"\nCreating backtest visualization...")
     chart_path = demo.create_backtest_visualization(result)
     print(f"Chart saved: {chart_path}")
     
     # Generiere Bericht
- print(f"\n Generating comprehensive report...")
+    print(f"\nGenerating comprehensive report...")
     report = demo.generate_demo_report(result)
     print(report)
     
@@ -352,7 +352,7 @@ def main():
     with open(report_path, 'w') as f:
         f.write(report)
     
- print(f"\n Report saved: {report_path}")
+    print(f"\nReport saved: {report_path}")
     
     # Speichere JSON-Ergebnisse
     results_path = '/home/ubuntu/trading_system/backtest_demo_results.json'
@@ -370,7 +370,7 @@ def main():
     
     print(f"Results saved: {results_path}")
     
- print(f"\n BACKTESTING DEMO COMPLETED SUCCESSFULLY!")
+    print(f"\nBACKTESTING DEMO COMPLETED SUCCESSFULLY!")
 
 if __name__ == "__main__":
     main()

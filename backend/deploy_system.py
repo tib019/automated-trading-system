@@ -35,14 +35,14 @@ class TradingSystemDeployer:
                 self.log(f"Missing required directory: {dir_path}", 'ERROR')
                 return False
             else:
-                self.log(f"✅ Found directory: {dir_path}")
+                self.log(f"Found directory: {dir_path}")
         
         # Check Python dependencies
         required_packages = ['flask', 'flask-cors', 'cryptography', 'pandas', 'numpy']
         for package in required_packages:
             try:
                 __import__(package.replace('-', '_'))
-                self.log(f"✅ Package available: {package}")
+                self.log(f"Package available: {package}")
             except ImportError:
                 self.log(f"Missing package: {package}", 'ERROR')
                 return False
@@ -135,7 +135,7 @@ volumes:
         with open(os.path.join(self.api_dir, 'docker-compose.yml'), 'w') as f:
             f.write(docker_compose_content)
         
-        self.log("✅ Docker files created")
+        self.log("Docker files created")
     
     def create_requirements_file(self):
         """Create requirements.txt for deployment"""
@@ -156,7 +156,7 @@ volumes:
         with open(os.path.join(self.api_dir, 'requirements.txt'), 'w') as f:
             f.write('\n'.join(requirements))
         
-        self.log("✅ Requirements file created")
+        self.log("Requirements file created")
     
     def create_nginx_config(self):
         """Create Nginx configuration for reverse proxy"""
@@ -204,7 +204,7 @@ http {
         with open(os.path.join(self.api_dir, 'nginx.conf'), 'w') as f:
             f.write(nginx_config)
         
-        self.log("✅ Nginx configuration created")
+        self.log("Nginx configuration created")
     
     def create_monitoring_scripts(self):
         """Create monitoring and maintenance scripts"""
@@ -297,7 +297,7 @@ fi
         
         os.chmod(os.path.join(self.base_dir, 'backup.sh'), 0o755)
         
-        self.log("✅ Monitoring scripts created")
+        self.log("Monitoring scripts created")
     
     def create_systemd_services(self):
         """Create systemd service files"""
@@ -325,7 +325,7 @@ WantedBy=multi-user.target
         with open('/tmp/trading-api.service', 'w') as f:
             f.write(api_service)
         
-        self.log("✅ Systemd service files created in /tmp/")
+        self.log("Systemd service files created in /tmp/")
         self.log("To install: sudo cp /tmp/trading-api.service /etc/systemd/system/")
     
     def create_deployment_summary(self):
@@ -439,11 +439,11 @@ python security_audit.py
         with open(os.path.join(self.base_dir, 'DEPLOYMENT_SUMMARY.md'), 'w') as f:
             f.write(summary)
         
-        self.log("✅ Deployment summary created")
+        self.log("Deployment summary created")
     
     def run_deployment(self):
         """Run complete deployment process"""
-        self.log("🚀 Starting Trading System Deployment")
+        self.log("Starting Trading System Deployment")
         self.log("=" * 50)
         
         if not self.check_prerequisites():
@@ -459,10 +459,10 @@ python security_audit.py
             self.create_deployment_summary()
             
             self.log("=" * 50)
-            self.log("✅ DEPLOYMENT COMPLETED SUCCESSFULLY")
+            self.log("DEPLOYMENT COMPLETED SUCCESSFULLY")
             self.log("=" * 50)
             
-            self.log("📋 Next Steps:")
+            self.log("Next Steps:")
             self.log("1. Review deployment summary: cat DEPLOYMENT_SUMMARY.md")
             self.log("2. Choose deployment method (Docker recommended)")
             self.log("3. Set up monitoring and backups")
@@ -489,10 +489,10 @@ def main():
     deployer.save_deployment_log()
     
     if success:
- print("\n Trading System is ready for deployment!")
- print("Read DEPLOYMENT_SUMMARY.md for detailed instructions")
+        print("\nTrading System is ready for deployment!")
+        print("Read DEPLOYMENT_SUMMARY.md for detailed instructions")
     else:
- print("\n Deployment failed. Check the logs for details.")
+        print("\nDeployment failed. Check the logs for details.")
     
     return success
 

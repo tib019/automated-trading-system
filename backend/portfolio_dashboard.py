@@ -34,13 +34,13 @@ class PortfolioDashboard:
         
         report = []
         report.append("=" * 80)
-        report.append("📊 TRADING SYSTEM - PORTFOLIO REPORT")
+        report.append("TRADING SYSTEM - PORTFOLIO REPORT")
         report.append("=" * 80)
         report.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         report.append("")
         
         # Portfolio-Übersicht
-        report.append("💼 PORTFOLIO OVERVIEW")
+        report.append("PORTFOLIO OVERVIEW")
         report.append("-" * 40)
         report.append(f"Total Portfolio Value: ${metrics['total_value']:,.2f}")
         report.append(f"Initial Capital: ${self.config.BACKTESTING['initial_capital']:,.2f}")
@@ -52,15 +52,15 @@ class PortfolioDashboard:
         
         # Risiko-Metriken
         risk_emoji = {
-            'LOW': '🟢',
-            'MODERATE': '🟡', 
-            'HIGH': '🟠',
-            'CRITICAL': '🔴'
+            'LOW': '',
+            'MODERATE': '', 
+            'HIGH': '',
+            'CRITICAL': ''
         }
         
-        report.append("🛡️ RISK METRICS")
+        report.append("RISK METRICS")
         report.append("-" * 40)
-        report.append(f"Risk Level: {risk_emoji.get(metrics['risk_level'], '⚪')} {metrics['risk_level']}")
+        report.append(f"Risk Level: {risk_emoji.get(metrics['risk_level'], '')} {metrics['risk_level']}")
         report.append(f"Open Positions: {metrics['open_positions']}")
         report.append(f"Total Positions: {metrics['total_positions']}")
         report.append(f"Win Rate: {metrics['win_rate']:.1f}%")
@@ -71,13 +71,13 @@ class PortfolioDashboard:
         # Offene Positionen
         open_positions = self.portfolio_tracker.get_open_positions()
         if open_positions:
-            report.append("📈 OPEN POSITIONS")
+            report.append("OPEN POSITIONS")
             report.append("-" * 40)
             
             for pos in open_positions:
                 pnl_percent = (pos.unrealized_pnl / pos.position_size_usd) * 100
-                direction = "🟢 LONG" if pos.signal_type.value == "BUY" else "🔴 SHORT"
-                status_emoji = "📈" if pos.unrealized_pnl > 0 else "📉" if pos.unrealized_pnl < 0 else "➡️"
+                direction = "LONG" if pos.signal_type.value == "BUY" else "SHORT"
+                status_emoji = "" if pos.unrealized_pnl > 0 else "" if pos.unrealized_pnl < 0 else ""
                 
                 report.append(f"{direction} {pos.symbol}")
                 report.append(f"  Entry: ${pos.entry_price:,.2f} | Current: ${pos.current_price:,.2f}")
@@ -86,29 +86,29 @@ class PortfolioDashboard:
                 report.append(f"  Stop Loss: ${pos.stop_loss:,.2f} | Take Profit: ${pos.take_profit:,.2f}")
                 report.append("")
         else:
-            report.append("📈 OPEN POSITIONS")
+            report.append("OPEN POSITIONS")
             report.append("-" * 40)
             report.append("No open positions")
             report.append("")
         
         # Alerts und Aktionen
         if monitoring_result['alerts']:
-            report.append("⚠️ ALERTS")
+            report.append("ALERTS")
             report.append("-" * 40)
             for alert in monitoring_result['alerts']:
-                report.append(f"• {alert}")
+                report.append(f"{alert}")
             report.append("")
         
         if monitoring_result['actions_taken']:
-            report.append("🚨 ACTIONS TAKEN")
+            report.append("ACTIONS TAKEN")
             report.append("-" * 40)
             for action in monitoring_result['actions_taken']:
-                report.append(f"• {action}")
+                report.append(f"{action}")
             report.append("")
         
         # Kill-Switch Status
-        kill_switch_emoji = "🔴 ACTIVE" if monitoring_result['kill_switch_active'] else "🟢 INACTIVE"
-        report.append("🛑 KILL-SWITCH STATUS")
+        kill_switch_emoji = "ACTIVE" if monitoring_result['kill_switch_active'] else "INACTIVE"
+        report.append("KILL-SWITCH STATUS")
         report.append("-" * 40)
         report.append(f"Status: {kill_switch_emoji}")
         report.append("")
@@ -116,7 +116,7 @@ class PortfolioDashboard:
         # Jüngste Risiko-Events
         risk_events = self._get_recent_risk_events(5)
         if risk_events:
-            report.append("📋 RECENT RISK EVENTS")
+            report.append("RECENT RISK EVENTS")
             report.append("-" * 40)
             for event in risk_events:
                 timestamp = event[1][:19] if isinstance(event[1], str) else str(event[1])[:19]
@@ -303,7 +303,7 @@ class PortfolioDashboard:
 def main():
     """Test des Portfolio-Dashboards"""
     print("=" * 80)
- print("PORTFOLIO DASHBOARD TEST")
+    print("PORTFOLIO DASHBOARD TEST")
     print("=" * 80)
     
     dashboard = PortfolioDashboard()
@@ -313,7 +313,7 @@ def main():
     print(report)
     
     # Erstelle Charts
- print("\n Creating portfolio charts...")
+    print("\nCreating portfolio charts...")
     
     try:
         portfolio_chart = dashboard.create_portfolio_chart(days=1)
@@ -331,7 +331,7 @@ def main():
     export_path = dashboard.export_portfolio_data()
     print(f"Portfolio data exported: {export_path}")
     
- print("\n Dashboard test completed!")
+    print("\nDashboard test completed!")
 
 if __name__ == "__main__":
     main()

@@ -32,7 +32,7 @@ class SecurityAuditor:
     
     def run_full_audit(self) -> Dict:
         """Run complete security audit"""
- print("Starting Security Audit...")
+        print("Starting Security Audit...")
         print("=" * 50)
         
         # File system security
@@ -70,7 +70,7 @@ class SecurityAuditor:
     
     def check_file_permissions(self):
         """Check file and directory permissions"""
- print("Checking file permissions...")
+        print("Checking file permissions...")
         
         critical_files = [
             '/home/ubuntu/trading_system/.master_key',
@@ -86,27 +86,27 @@ class SecurityAuditor:
                 
                 if file_path.endswith('.master_key'):
                     if permissions == '600':
-                        self.add_check("✅ Master key file has secure permissions (600)")
+                        self.add_check("Master key file has secure permissions (600)")
                     else:
-                        self.add_vulnerability(f"⚠️ Master key file permissions: {permissions} (should be 600)")
+                        self.add_vulnerability(f"Master key file permissions: {permissions} (should be 600)")
                 
                 elif file_path.endswith('.db'):
                     if permissions in ['600', '640']:
-                        self.add_check(f"✅ Database file {os.path.basename(file_path)} has secure permissions ({permissions})")
+                        self.add_check(f"Database file {os.path.basename(file_path)} has secure permissions ({permissions})")
                     else:
-                        self.add_vulnerability(f"⚠️ Database file {os.path.basename(file_path)} permissions: {permissions} (should be 600 or 640)")
+                        self.add_vulnerability(f"Database file {os.path.basename(file_path)} permissions: {permissions} (should be 600 or 640)")
                 
                 else:
                     if permissions in ['644', '640', '600']:
-                        self.add_check(f"✅ Config file {os.path.basename(file_path)} has acceptable permissions ({permissions})")
+                        self.add_check(f"Config file {os.path.basename(file_path)} has acceptable permissions ({permissions})")
                     else:
-                        self.add_vulnerability(f"⚠️ Config file {os.path.basename(file_path)} permissions: {permissions}")
+                        self.add_vulnerability(f"Config file {os.path.basename(file_path)} permissions: {permissions}")
             else:
-                self.add_check(f"ℹ️ File {os.path.basename(file_path)} does not exist")
+                self.add_check(f"File {os.path.basename(file_path)} does not exist")
     
     def check_sensitive_files(self):
         """Check for sensitive files in wrong locations"""
- print("Checking for sensitive files...")
+        print("Checking for sensitive files...")
         
         # Check for API keys in code files
         code_files = []
@@ -134,16 +134,16 @@ class SecurityAuditor:
                         lines = content.split('\n')
                         for i, line in enumerate(lines):
                             if pattern in line and '=' in line and not line.strip().startswith('#'):
-                                self.add_vulnerability(f"⚠️ Potential hardcoded {pattern} in {os.path.basename(file_path)}:{i+1}")
+                                self.add_vulnerability(f"Potential hardcoded {pattern} in {os.path.basename(file_path)}:{i+1}")
                                 break
             except Exception:
                 continue
         
-        self.add_check("✅ Sensitive file scan completed")
+        self.add_check("Sensitive file scan completed")
     
     def check_database_security(self):
         """Check database security configuration"""
- print("️ Checking database security...")
+        print("Checking database security...")
         
         db_files = [
             '/home/ubuntu/trading_system/security.db',
@@ -161,7 +161,7 @@ class SecurityAuditor:
                     tables = cursor.fetchall()
                     
                     if tables:
-                        self.add_check(f"✅ Database {os.path.basename(db_file)} has {len(tables)} tables")
+                        self.add_check(f"Database {os.path.basename(db_file)} has {len(tables)} tables")
                         
                         # Check for encrypted data
                         for table in tables:
@@ -171,16 +171,16 @@ class SecurityAuditor:
                             
                             encrypted_columns = [col for col in columns if 'encrypted' in col[1].lower()]
                             if encrypted_columns:
-                                self.add_check(f"✅ Table {table_name} has encrypted columns")
+                                self.add_check(f"Table {table_name} has encrypted columns")
                     
                     conn.close()
                     
                 except Exception as e:
-                    self.add_vulnerability(f"⚠️ Database {os.path.basename(db_file)} access error: {e}")
+                    self.add_vulnerability(f"Database {os.path.basename(db_file)} access error: {e}")
     
     def check_configuration_security(self):
         """Check configuration security"""
- print("️ Checking configuration security...")
+        print("Checking configuration security...")
         
         # Check environment variables
         sensitive_env_vars = [
@@ -192,11 +192,11 @@ class SecurityAuditor:
         for env_var in sensitive_env_vars:
             if os.environ.get(env_var):
                 if env_var == 'TRADING_MASTER_PASSWORD' and os.environ.get(env_var) == 'default_password_change_me':
-                    self.add_vulnerability("⚠️ Default master password is being used")
+                    self.add_vulnerability("Default master password is being used")
                 else:
-                    self.add_check(f"✅ Environment variable {env_var} is set")
+                    self.add_check(f"Environment variable {env_var} is set")
             else:
-                self.add_vulnerability(f"⚠️ Environment variable {env_var} is not set")
+                self.add_vulnerability(f"Environment variable {env_var} is not set")
         
         # Check config file
         config_file = '/home/ubuntu/trading_system/config.py'
@@ -205,13 +205,13 @@ class SecurityAuditor:
                 content = f.read()
                 
             if 'default_secret_change_me' in content:
-                self.add_vulnerability("⚠️ Default webhook secret found in config")
+                self.add_vulnerability("Default webhook secret found in config")
             else:
-                self.add_check("✅ No default secrets found in config")
+                self.add_check("No default secrets found in config")
     
     def check_api_security(self):
         """Check API security measures"""
- print("Checking API security...")
+        print("Checking API security...")
         
         # Check if API keys are encrypted
         try:
@@ -220,12 +220,12 @@ class SecurityAuditor:
             key, secret = self.security_manager.get_api_key("audit_test")
             
             if key == "test_key" and secret == "test_secret":
-                self.add_check("✅ API key encryption/decryption working")
+                self.add_check("API key encryption/decryption working")
             else:
-                self.add_vulnerability("⚠️ API key encryption/decryption failed")
+                self.add_vulnerability("API key encryption/decryption failed")
                 
         except Exception as e:
-            self.add_vulnerability(f"⚠️ API key system error: {e}")
+            self.add_vulnerability(f"API key system error: {e}")
         
         # Check webhook signature validation
         try:
@@ -235,16 +235,16 @@ class SecurityAuditor:
             is_valid = self.security_manager.validate_webhook_signature(payload, signature, secret)
             
             if is_valid:
-                self.add_check("✅ Webhook signature validation working")
+                self.add_check("Webhook signature validation working")
             else:
-                self.add_vulnerability("⚠️ Webhook signature validation failed")
+                self.add_vulnerability("Webhook signature validation failed")
                 
         except Exception as e:
-            self.add_vulnerability(f"⚠️ Webhook signature system error: {e}")
+            self.add_vulnerability(f"Webhook signature system error: {e}")
     
     def check_encryption_security(self):
         """Check encryption implementation"""
- print("Checking encryption security...")
+        print("Checking encryption security...")
         
         try:
             # Test encryption strength
@@ -255,23 +255,23 @@ class SecurityAuditor:
             encrypted2 = self.security_manager.encrypt_data(test_data)
             
             if encrypted1 != encrypted2:
-                self.add_check("✅ Encryption uses proper randomization")
+                self.add_check("Encryption uses proper randomization")
             else:
-                self.add_vulnerability("⚠️ Encryption may not use proper randomization")
+                self.add_vulnerability("Encryption may not use proper randomization")
             
             # Test decryption
             decrypted = self.security_manager.decrypt_data(encrypted1)
             if decrypted == test_data:
-                self.add_check("✅ Encryption/decryption integrity verified")
+                self.add_check("Encryption/decryption integrity verified")
             else:
-                self.add_vulnerability("⚠️ Encryption/decryption integrity failed")
+                self.add_vulnerability("Encryption/decryption integrity failed")
                 
         except Exception as e:
-            self.add_vulnerability(f"⚠️ Encryption system error: {e}")
+            self.add_vulnerability(f"Encryption system error: {e}")
     
     def check_network_security(self):
         """Check network security configuration"""
- print("Checking network security...")
+        print("Checking network security...")
         
         # Check for open ports
         try:
@@ -285,16 +285,16 @@ class SecurityAuditor:
                         open_ports.append(line.strip())
                 
                 if open_ports:
-                    self.add_check(f"ℹ️ Found {len(open_ports)} development ports open")
+                    self.add_check(f"Found {len(open_ports)} development ports open")
                 else:
-                    self.add_check("✅ No unexpected ports found")
+                    self.add_check("No unexpected ports found")
                     
         except Exception as e:
-            self.add_check(f"ℹ️ Network scan skipped: {e}")
+            self.add_check(f"Network scan skipped: {e}")
     
     def check_input_validation(self):
         """Check input validation and sanitization"""
- print("Checking input validation...")
+        print("Checking input validation...")
         
         dangerous_inputs = [
             "<script>alert('xss')</script>",
@@ -312,18 +312,18 @@ class SecurityAuditor:
                 # Check if dangerous characters are removed
                 if any(char in sanitized for char in ['<', '>', '"', "'", '\x00']):
                     all_safe = False
-                    self.add_vulnerability(f"⚠️ Input sanitization failed for: {dangerous_input[:20]}...")
+                    self.add_vulnerability(f"Input sanitization failed for: {dangerous_input[:20]}...")
                     
             except Exception as e:
                 all_safe = False
-                self.add_vulnerability(f"⚠️ Input sanitization error: {e}")
+                self.add_vulnerability(f"Input sanitization error: {e}")
         
         if all_safe:
-            self.add_check("✅ Input sanitization working correctly")
+            self.add_check("Input sanitization working correctly")
     
     def check_auth_security(self):
         """Check authentication and authorization"""
- print("Checking authentication security...")
+        print("Checking authentication security...")
         
         # Check session management
         try:
@@ -333,24 +333,24 @@ class SecurityAuditor:
             session_id = session_manager.create_session("test_user", "127.0.0.1", "test_agent")
             
             if session_id and len(session_id) > 20:
-                self.add_check("✅ Session ID generation working")
+                self.add_check("Session ID generation working")
                 
                 # Test session validation
                 is_valid = session_manager.validate_session(session_id, "127.0.0.1")
                 if is_valid:
-                    self.add_check("✅ Session validation working")
+                    self.add_check("Session validation working")
                 else:
-                    self.add_vulnerability("⚠️ Session validation failed")
+                    self.add_vulnerability("Session validation failed")
                     
             else:
-                self.add_vulnerability("⚠️ Session ID generation failed")
+                self.add_vulnerability("Session ID generation failed")
                 
         except Exception as e:
-            self.add_vulnerability(f"⚠️ Session management error: {e}")
+            self.add_vulnerability(f"Session management error: {e}")
     
     def check_logging_security(self):
         """Check logging and monitoring"""
- print("Checking logging security...")
+        print("Checking logging security...")
         
         log_files = [
             '/home/ubuntu/trading_system/security.log',
@@ -363,11 +363,11 @@ class SecurityAuditor:
                 permissions = oct(stat_info.st_mode)[-3:]
                 
                 if permissions in ['644', '640', '600']:
-                    self.add_check(f"✅ Log file {os.path.basename(log_file)} has secure permissions")
+                    self.add_check(f"Log file {os.path.basename(log_file)} has secure permissions")
                 else:
-                    self.add_vulnerability(f"⚠️ Log file {os.path.basename(log_file)} permissions: {permissions}")
+                    self.add_vulnerability(f"Log file {os.path.basename(log_file)} permissions: {permissions}")
             else:
-                self.add_check(f"ℹ️ Log file {os.path.basename(log_file)} not found")
+                self.add_check(f"Log file {os.path.basename(log_file)} not found")
         
         # Test security event logging
         try:
@@ -381,12 +381,12 @@ class SecurityAuditor:
             
             events = self.security_manager.get_security_events(hours=1)
             if events:
-                self.add_check("✅ Security event logging working")
+                self.add_check("Security event logging working")
             else:
-                self.add_vulnerability("⚠️ Security event logging failed")
+                self.add_vulnerability("Security event logging failed")
                 
         except Exception as e:
-            self.add_vulnerability(f"⚠️ Security logging error: {e}")
+            self.add_vulnerability(f"Security logging error: {e}")
     
     def calculate_security_score(self):
         """Calculate overall security score"""
@@ -401,23 +401,23 @@ class SecurityAuditor:
         
         # Add recommendations based on vulnerabilities
         if vulnerabilities == 0:
-            self.audit_results['recommendations'].append("✅ Excellent security posture!")
+            self.audit_results['recommendations'].append("Excellent security posture!")
         elif vulnerabilities <= 2:
-            self.audit_results['recommendations'].append("🟡 Good security with minor issues to address")
+            self.audit_results['recommendations'].append("Good security with minor issues to address")
         elif vulnerabilities <= 5:
-            self.audit_results['recommendations'].append("🟠 Moderate security risks - address vulnerabilities soon")
+            self.audit_results['recommendations'].append("Moderate security risks - address vulnerabilities soon")
         else:
-            self.audit_results['recommendations'].append("🔴 High security risk - immediate action required")
+            self.audit_results['recommendations'].append("High security risk - immediate action required")
         
         # Specific recommendations
         if any("default" in vuln for vuln in self.audit_results['vulnerabilities']):
-            self.audit_results['recommendations'].append("• Change all default passwords and secrets")
+            self.audit_results['recommendations'].append("Change all default passwords and secrets")
         
         if any("permission" in vuln for vuln in self.audit_results['vulnerabilities']):
-            self.audit_results['recommendations'].append("• Fix file permissions for sensitive files")
+            self.audit_results['recommendations'].append("Fix file permissions for sensitive files")
         
         if any("hardcoded" in vuln for vuln in self.audit_results['vulnerabilities']):
-            self.audit_results['recommendations'].append("• Remove hardcoded secrets from code")
+            self.audit_results['recommendations'].append("Remove hardcoded secrets from code")
     
     def add_check(self, message: str):
         """Add a security check result"""
@@ -488,13 +488,13 @@ def main():
     print(f"Vulnerabilities: {len(results['vulnerabilities'])}")
     
     if results['score'] >= 90:
- print("EXCELLENT SECURITY")
+        print("EXCELLENT SECURITY")
     elif results['score'] >= 80:
- print("GOOD SECURITY")
+        print("GOOD SECURITY")
     elif results['score'] >= 60:
- print("MODERATE SECURITY")
+        print("MODERATE SECURITY")
     else:
- print("POOR SECURITY")
+        print("POOR SECURITY")
     
     # Save report
     report = auditor.generate_report()

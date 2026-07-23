@@ -630,26 +630,26 @@ class OrderManager:
 def main():
     """Test des Order-Management-Systems"""
     print("=" * 80)
- print("ORDER MANAGEMENT SYSTEM TEST")
+    print("ORDER MANAGEMENT SYSTEM TEST")
     print("=" * 80)
     
     order_manager = OrderManager()
     
     # Verbinde mit Brokern
- print("Connecting to brokers...")
+    print("Connecting to brokers...")
     connection_results = order_manager.connect_brokers()
     
     for broker_type, connected in connection_results.items():
-        status = "✅ Connected" if connected else "❌ Failed"
+        status = "Connected" if connected else "Failed"
         print(f"   {broker_type.value}: {status}")
     
     # Hole Broker-Status
- print(f"\n Broker Status:")
+    print(f"\nBroker Status:")
     broker_status = order_manager.get_broker_status()
     
     for broker_name, status in broker_status.items():
         print(f"\n{broker_name}:")
- print(f" Connected: {'' if status['connected'] else ''}")
+        print(f"   Connected: {'' if status['connected'] else ''}")
         
         if status['connected']:
             balances = status['balances']
@@ -670,7 +670,7 @@ def main():
                 print(f"   Positions: None")
     
     # Test Order-Ausführung mit Paper Trading
- print(f"\n Testing order execution...")
+    print(f"\nTesting order execution...")
     
     from signal_generator import TradingSignal, SignalStrength
     
@@ -694,22 +694,22 @@ def main():
     success, message = order_manager.execute_signal(test_signal, BrokerType.PAPER_TRADING)
     
     if success:
- print(f" Test order executed: {message}")
+        print(f"Test order executed: {message}")
     else:
- print(f" Test order failed: {message}")
+        print(f"Test order failed: {message}")
     
     # Zeige Order-Historie
- print(f"\n Order History:")
+    print(f"\nOrder History:")
     orders = order_manager.get_order_history(5)
     
     if orders:
         for order in orders:
-            status_emoji = "✅" if order.status == OrderStatus.FILLED else "⏳" if order.status == OrderStatus.SUBMITTED else "❌"
+            status_emoji = "" if order.status == OrderStatus.FILLED else "" if order.status == OrderStatus.SUBMITTED else ""
             print(f"   {status_emoji} {order.symbol} {order.side.value} {order.quantity:.6f} @ ${order.price:.2f} - {order.status.value}")
     else:
-        print("No orders found")
+        print("   No orders found")
     
- print(f"\n Order Management System test completed!")
+    print(f"\nOrder Management System test completed!")
 
 if __name__ == "__main__":
     main()
