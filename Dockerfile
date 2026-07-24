@@ -9,9 +9,12 @@ LABEL version="1.0.0"
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV PYTHONPATH=/app
-ENV FLASK_APP=backend/main_simple.py
+ENV PYTHONPATH=/app/backend
+ENV FLASK_APP=backend/webhook_server.py
 ENV FLASK_ENV=production
+ENV API_PORT=5001
+# Portable base directory for databases, logs and keys (see backend modules).
+ENV TRADING_HOME=/app/data
 
 # Set work directory
 WORKDIR /app
@@ -53,10 +56,10 @@ USER trading
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:5001/api/health || exit 1
+    CMD curl -f http://localhost:5001/health || exit 1
 
 # Expose port
 EXPOSE 5001
 
-# Run the application
-CMD ["python", "backend/main_simple.py"]
+# Run the TradingView webhook / trading API server (PAPER_TRADING by default).
+CMD ["python", "backend/webhook_server.py"]

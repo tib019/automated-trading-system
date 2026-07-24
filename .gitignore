@@ -336,3 +336,7 @@ ipython_config.py
 config.bak
 settings.bak
 
+
+# sandbox-only verification artifacts (never commit)
+Dockerfile.verify
+ccr-ca.crt

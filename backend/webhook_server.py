@@ -6,6 +6,7 @@ Flask-basierter Webhook-Server für TradingView-Signale
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os
 import json
 import logging
 from datetime import datetime
@@ -183,6 +184,7 @@ class WebhookServer:
 webhook_server = WebhookServer()
 
 @app.route('/', methods=['GET'])
+@app.route('/health', methods=['GET'])
 def health_check():
     """Health Check Endpoint"""
     return jsonify({
@@ -311,17 +313,19 @@ def get_brokers():
     return jsonify(webhook_server.order_manager.get_broker_status())
 
 if __name__ == '__main__':
+    host = os.environ.get('API_HOST', '0.0.0.0')
+    port = int(os.environ.get('API_PORT', '5001'))
     print("=" * 80)
     print("TRADINGVIEW WEBHOOK SERVER")
     print("=" * 80)
     print("Starting TradingView Webhook Server...")
-    print(f"Health Check: http://localhost:5000/")
-    print(f"TradingView Webhook: http://localhost:5000/webhook/tradingview")
-    print(f"Test Webhook: http://localhost:5000/webhook/test")
-    print(f"Status: http://localhost:5000/status")
-    print(f"Orders: http://localhost:5000/orders")
+    print(f"Health Check: http://localhost:{port}/")
+    print(f"TradingView Webhook: http://localhost:{port}/webhook/tradingview")
+    print(f"Test Webhook: http://localhost:{port}/webhook/test")
+    print(f"Status: http://localhost:{port}/status")
+    print(f"Orders: http://localhost:{port}/orders")
     print("=" * 80)
-    
+
     # Starte Flask-Server
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host=host, port=port, debug=False)
 

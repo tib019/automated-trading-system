@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 
-const API_BASE_URL = 'http://localhost:5000'
+// Same-origin by default: the app calls /api/... which nginx proxies to the
+// backend (prefix stripped). Override with VITE_API_BASE_URL for local dev
+// against a differently-hosted API.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api'
 
 export const useApi = () => {
   const [isLoading, setIsLoading] = useState(false)

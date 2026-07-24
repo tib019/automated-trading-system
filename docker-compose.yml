@@ -1,7 +1,5 @@
-version: '3.8'
-
 services:
-  # Trading System API Backend
+  # Trading / TradingView webhook API backend (PAPER_TRADING by default)
   trading-api:
     build:
       context: .
@@ -14,8 +12,12 @@ services:
       - FLASK_ENV=production
       - API_HOST=0.0.0.0
       - API_PORT=5001
+      - TRADING_HOME=/app/data
+    # Optional: drop your secrets into a .env file (see .env.example).
+    # The stack also runs without it - it defaults to safe PAPER_TRADING.
     env_file:
-      - .env
+      - path: .env
+        required: false
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
@@ -23,13 +25,13 @@ services:
     networks:
       - trading-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5001/api/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
 
-  # React Dashboard Frontend
+  # React dashboard (nginx serves the build and proxies /api -> trading-api)
   trading-dashboard:
     build:
       context: ./frontend
@@ -38,15 +40,12 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - REACT_APP_API_URL=http://localhost:5001/api
     networks:
       - trading-network
     depends_on:
       - trading-api
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -54,9 +53,3 @@ services:
 networks:
   trading-network:
     driver: bridge
-
-volumes:
-  trading_data:
-    driver: local
-  trading_logs:
-    driver: local
