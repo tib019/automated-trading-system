@@ -20,12 +20,18 @@ import logging
 from functools import wraps
 import ipaddress
 
+
+# --- portable base directory (was hardcoded /home/ubuntu/trading_system) ---
+import os
+TRADING_HOME = os.environ.get("TRADING_HOME") or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data"))
+os.makedirs(TRADING_HOME, exist_ok=True)
+
 class SecurityManager:
     """Comprehensive security management for the trading system"""
     
-    def __init__(self, config_path: str = '/home/ubuntu/trading_system/security_config.json'):
+    def __init__(self, config_path: str = os.path.join(TRADING_HOME, 'security_config.json')):
         self.config_path = config_path
-        self.db_path = '/home/ubuntu/trading_system/security.db'
+        self.db_path = os.path.join(TRADING_HOME, 'security.db')
         self.logger = self._setup_logging()
         self._init_database()
         self._load_or_create_master_key()
@@ -38,7 +44,7 @@ class SecurityManager:
         logger.setLevel(logging.INFO)
         
         # Create file handler for security logs
-        handler = logging.FileHandler('/home/ubuntu/trading_system/security.log')
+        handler = logging.FileHandler(os.path.join(TRADING_HOME, 'security.log'))
         formatter = logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         )
@@ -108,7 +114,7 @@ class SecurityManager:
     
     def _load_or_create_master_key(self):
         """Load or create master encryption key"""
-        key_file = '/home/ubuntu/trading_system/.master_key'
+        key_file = os.path.join(TRADING_HOME, '.master_key')
         
         if os.path.exists(key_file):
             with open(key_file, 'rb') as f:
@@ -332,7 +338,7 @@ class RateLimiter:
     """Rate limiting for API endpoints"""
     
     def __init__(self):
-        self.db_path = '/home/ubuntu/trading_system/security.db'
+        self.db_path = os.path.join(TRADING_HOME, 'security.db')
         self.limits = {
             'webhook': {'requests': 60, 'window': 60},  # 60 requests per minute
             'api': {'requests': 100, 'window': 60},     # 100 requests per minute
@@ -385,7 +391,7 @@ class SessionManager:
     """Manage user sessions"""
     
     def __init__(self):
-        self.db_path = '/home/ubuntu/trading_system/security.db'
+        self.db_path = os.path.join(TRADING_HOME, 'security.db')
         self.session_timeout = 3600  # 1 hour
     
     def create_session(self, user_id: str, ip_address: str, user_agent: str) -> str:

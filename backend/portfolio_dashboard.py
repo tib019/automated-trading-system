@@ -14,6 +14,12 @@ import json
 from risk_manager import RiskManager, PortfolioTracker, Position, PositionStatus
 from config import get_config
 
+
+# --- portable base directory (was hardcoded /home/ubuntu/trading_system) ---
+import os
+TRADING_HOME = os.environ.get("TRADING_HOME") or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data"))
+os.makedirs(TRADING_HOME, exist_ok=True)
+
 class PortfolioDashboard:
     """Portfolio-Dashboard für Visualisierung und Monitoring"""
     
@@ -175,7 +181,7 @@ class PortfolioDashboard:
         plt.tight_layout()
         
         # Speichere Chart
-        chart_path = '/home/ubuntu/trading_system/portfolio_chart.png'
+        chart_path = os.path.join(TRADING_HOME, 'portfolio_chart.png')
         plt.savefig(chart_path, dpi=300, bbox_inches='tight')
         plt.close()
         
@@ -227,7 +233,7 @@ class PortfolioDashboard:
         plt.tight_layout()
         
         # Speichere Chart
-        chart_path = '/home/ubuntu/trading_system/positions_chart.png'
+        chart_path = os.path.join(TRADING_HOME, 'positions_chart.png')
         plt.savefig(chart_path, dpi=300, bbox_inches='tight')
         plt.close()
         
@@ -268,7 +274,7 @@ class PortfolioDashboard:
             ]
         }
         
-        export_path = '/home/ubuntu/trading_system/portfolio_export.json'
+        export_path = os.path.join(TRADING_HOME, 'portfolio_export.json')
         with open(export_path, 'w') as f:
             json.dump(export_data, f, indent=2)
         

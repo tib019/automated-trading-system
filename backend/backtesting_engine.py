@@ -18,6 +18,12 @@ from signal_generator import SignalGenerator, TradingSignal, SignalType, SignalS
 from sentiment_analyzer import SentimentAggregator
 from risk_manager import PortfolioTracker, Position, PositionStatus
 
+
+# --- portable base directory (was hardcoded /home/ubuntu/trading_system) ---
+import os
+TRADING_HOME = os.environ.get("TRADING_HOME") or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data"))
+os.makedirs(TRADING_HOME, exist_ok=True)
+
 @dataclass
 class BacktestResult:
     """Backtesting-Ergebnis-Datenklasse"""
@@ -63,7 +69,7 @@ class BacktestTrade:
 class HistoricalDataManager:
     """Manager für historische Marktdaten"""
     
-    def __init__(self, db_path: str = '/home/ubuntu/trading_system/trading_data.db'):
+    def __init__(self, db_path: str = os.path.join(TRADING_HOME, 'trading_data.db')):
         self.db_path = db_path
         self.config = get_config()
     
@@ -558,7 +564,7 @@ def main():
         print(f"   Volatility: {result.volatility:.2f}%")
         
         # Speichere Ergebnisse
-        results_path = '/home/ubuntu/trading_system/backtest_results.json'
+        results_path = os.path.join(TRADING_HOME, 'backtest_results.json')
         with open(results_path, 'w') as f:
             json.dump(asdict(result), f, indent=2, default=str)
         

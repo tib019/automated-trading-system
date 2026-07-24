@@ -13,6 +13,12 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
+
+# --- portable base directory (was hardcoded /home/ubuntu/trading_system) ---
+import os
+TRADING_HOME = os.environ.get("TRADING_HOME") or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data"))
+os.makedirs(TRADING_HOME, exist_ok=True)
+
 sys.path.append('/opt/.manus/.sandbox-runtime')
 from data_api import ApiClient
 
@@ -21,7 +27,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('/home/ubuntu/trading_system/data_collector.log'),
+        logging.FileHandler(os.path.join(TRADING_HOME, 'data_collector.log')),
         logging.StreamHandler()
     ]
 )
@@ -223,7 +229,7 @@ class TwitterCollector(DataCollector):
 class DatabaseManager:
     """Verwaltet SQLite-Datenbank für gesammelte Daten"""
     
-    def __init__(self, db_path: str = '/home/ubuntu/trading_system/trading_data.db'):
+    def __init__(self, db_path: str = os.path.join(TRADING_HOME, 'trading_data.db')):
         self.db_path = db_path
         self.init_database()
     

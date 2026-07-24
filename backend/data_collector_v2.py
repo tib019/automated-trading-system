@@ -14,6 +14,12 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional, Set
 from dataclasses import dataclass
 
+
+# --- portable base directory (was hardcoded /home/ubuntu/trading_system) ---
+import os
+TRADING_HOME = os.environ.get("TRADING_HOME") or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data"))
+os.makedirs(TRADING_HOME, exist_ok=True)
+
 sys.path.append('/opt/.manus/.sandbox-runtime')
 from data_api import ApiClient
 from config import get_config, get_all_symbols, get_symbol_aliases
@@ -23,7 +29,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('/home/ubuntu/trading_system/data_collector_v2.log'),
+        logging.FileHandler(os.path.join(TRADING_HOME, 'data_collector_v2.log')),
         logging.StreamHandler()
     ]
 )

@@ -16,6 +16,12 @@ from config import get_config
 from sentiment_analyzer import SentimentAggregator, SentimentScore
 
 # Logging Setup
+
+# --- portable base directory (was hardcoded /home/ubuntu/trading_system) ---
+import os
+TRADING_HOME = os.environ.get("TRADING_HOME") or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data"))
+os.makedirs(TRADING_HOME, exist_ok=True)
+
 logger = logging.getLogger(__name__)
 
 class SignalType(Enum):
@@ -55,7 +61,7 @@ class TradingSignal:
 class TechnicalAnalyzer:
     """Technische Analyse-Komponenten"""
     
-    def __init__(self, db_path: str = '/home/ubuntu/trading_system/trading_data.db'):
+    def __init__(self, db_path: str = os.path.join(TRADING_HOME, 'trading_data.db')):
         self.db_path = db_path
         self.config = get_config()
     

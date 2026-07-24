@@ -22,6 +22,12 @@ from signal_generator import TradingSignal, SignalType
 from risk_manager import RiskManager
 
 # Logging Setup
+
+# --- portable base directory (was hardcoded /home/ubuntu/trading_system) ---
+import os
+TRADING_HOME = os.environ.get("TRADING_HOME") or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data"))
+os.makedirs(TRADING_HOME, exist_ok=True)
+
 logger = logging.getLogger(__name__)
 
 class OrderType(Enum):
@@ -404,7 +410,7 @@ class OrderManager:
         self.config = get_config()
         self.risk_manager = RiskManager()
         self.brokers = {}
-        self.db_path = '/home/ubuntu/trading_system/trading_data.db'
+        self.db_path = os.path.join(TRADING_HOME, 'trading_data.db')
         
         # Initialisiere Datenbank
         self._init_order_database()
