@@ -312,6 +312,53 @@ def get_brokers():
     """Broker-Status Endpoint"""
     return jsonify(webhook_server.order_manager.get_broker_status())
 
+@app.route('/signals/<symbol>', methods=['GET'])
+def get_signal(symbol):
+    """Run the real data -> sentiment -> signal pipeline for a symbol.
+
+    Best-effort refresh of market/sentiment data for the symbol, then generate
+    a trading signal from the technical + sentiment fusion. Returns HOLD (200)
+    when there is not enough data or no actionable signal.
+    """
+    symbol = symbol.upper()
+    try:
+        # Lazy imports: keep server startup light and avoid a hard dependency
+        # if the analytics stack is unavailable in a given deployment.
+        from data_collector import TradingDataCollector
+        from signal_generator import SignalGenerator
+
+        try:
+            TradingDataCollector().collect_all_data([symbol])
+        except Exception as exc:
+            logger.warning(f"Data collection for {symbol} failed: {exc}")
+
+        signal = SignalGenerator().generate_signal(symbol)
+        if signal is None:
+            return jsonify({
+                'symbol': symbol,
+                'signal': 'HOLD',
+                'reason': 'insufficient data or no actionable signal',
+                'timestamp': datetime.now().isoformat(),
+            })
+
+        return jsonify({
+            'symbol': symbol,
+            'signal': signal.signal_type.value,
+            'strength': signal.strength.value,
+            'confidence': round(signal.confidence, 4),
+            'entry_price': signal.entry_price,
+            'stop_loss': signal.stop_loss,
+            'take_profit': signal.take_profit,
+            'risk_reward_ratio': round(signal.risk_reward_ratio, 3),
+            'sentiment_score': round(signal.sentiment_score, 4),
+            'technical_score': round(signal.technical_score, 4),
+            'reasoning': signal.reasoning,
+            'timestamp': signal.timestamp.isoformat(),
+        })
+    except Exception as exc:
+        logger.error(f"Signal generation for {symbol} failed: {exc}")
+        return jsonify({'symbol': symbol, 'error': str(exc)}), 500
+
 if __name__ == '__main__':
     host = os.environ.get('API_HOST', '0.0.0.0')
     port = int(os.environ.get('API_PORT', '5001'))

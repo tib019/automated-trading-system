@@ -340,3 +340,4 @@ settings.bak
 # sandbox-only verification artifacts (never commit)
 Dockerfile.verify
 ccr-ca.crt
+sandboxca.crt

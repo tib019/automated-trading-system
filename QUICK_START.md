@@ -80,6 +80,16 @@ curl -X POST http://localhost:3000/api/webhook/test \
 ```
 Erwartet: eine gefüllte Paper-Order (`"broker": "PAPER_TRADING"`).
 
+**Trading-Signal aus der Pipeline abrufen (Daten -> Sentiment -> Signal):**
+```bash
+curl http://localhost:3000/api/signals/AAPL
+```
+Holt Live-Marktdaten (Yahoo Finance, ohne API-Key) und Sentiment, berechnet
+technische Indikatoren und liefert ein Signal (BUY/SELL) oder ein konservatives
+`HOLD`, wenn die Daten kein klares, ausreichend sicheres Signal hergeben.
+Reddit/Twitter tragen zum Sentiment bei, sobald Credentials in der `.env`
+hinterlegt sind (ohne laufen sie leer, ohne Fehler).
+
 ## Tests ausführen
 
 ```bash
