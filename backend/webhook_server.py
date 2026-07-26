@@ -132,6 +132,20 @@ class WebhookServer:
                     'timestamp': datetime.now().isoformat()
                 }
             
+            # Risiko-Deckelung: Ordergroesse auf das mathematisch begruendete
+            # Maximum begrenzen (fractional Kelly x Volatilitaets-Targeting x
+            # CVaR-Budget). Risiko kann die Groesse nur verkleinern.
+            risk_detail = None
+            try:
+                from risk_service import cap_position_pct
+                applied, risk_detail = cap_position_pct(
+                    signal.symbol, signal.position_size_percent,
+                    signal.confidence, signal.risk_reward_ratio,
+                )
+                signal.position_size_percent = applied
+            except Exception as exc:
+                logger.warning(f"Risk sizing skipped for {signal.symbol}: {exc}")
+
             # Führe Signal aus (standardmäßig Paper Trading)
             broker_type = BrokerType.PAPER_TRADING
             if 'broker' in webhook_data:
@@ -153,8 +167,10 @@ class WebhookServer:
                         'symbol': signal.symbol,
                         'action': signal.signal_type.value,
                         'price': signal.entry_price,
-                        'strength': signal.strength.value
+                        'strength': signal.strength.value,
+                        'position_size_pct': signal.position_size_percent
                     },
+                    'risk': risk_detail,
                     'broker': broker_type.value,
                     'timestamp': datetime.now().isoformat()
                 }
@@ -332,12 +348,15 @@ def get_signal(symbol):
         except Exception as exc:
             logger.warning(f"Data collection for {symbol} failed: {exc}")
 
+        from risk_service import symbol_risk, recommended_position
+
         signal = SignalGenerator().generate_signal(symbol)
         if signal is None:
             return jsonify({
                 'symbol': symbol,
                 'signal': 'HOLD',
                 'reason': 'insufficient data or no actionable signal',
+                'risk': symbol_risk(symbol),
                 'timestamp': datetime.now().isoformat(),
             })
 
@@ -353,11 +372,57 @@ def get_signal(symbol):
             'sentiment_score': round(signal.sentiment_score, 4),
             'technical_score': round(signal.technical_score, 4),
             'reasoning': signal.reasoning,
+            'risk': symbol_risk(symbol),
+            'recommended_position': recommended_position(
+                symbol, signal.confidence, signal.risk_reward_ratio),
             'timestamp': signal.timestamp.isoformat(),
         })
     except Exception as exc:
         logger.error(f"Signal generation for {symbol} failed: {exc}")
         return jsonify({'symbol': symbol, 'error': str(exc)}), 500
+
+@app.route('/risk/<symbol>', methods=['GET'])
+def risk_report(symbol):
+    """Advanced risk report for a symbol: EWMA volatility, historical and
+    Cornish-Fisher VaR, CVaR (expected shortfall), max drawdown, Sharpe/Sortino.
+    """
+    try:
+        from risk_service import symbol_risk
+        return jsonify(symbol_risk(symbol.upper()))
+    except Exception as exc:
+        logger.error(f"Risk report for {symbol} failed: {exc}")
+        return jsonify({'symbol': symbol.upper(), 'error': str(exc)}), 500
+
+
+@app.route('/risk/portfolio', methods=['GET'])
+def portfolio_risk_report():
+    """Correlation-aware portfolio risk across the current open paper positions.
+
+    Uses the covariance matrix of the held symbols' returns, so correlated
+    positions are not treated as independent, and reports whether the portfolio
+    VaR is within budget (risk gate).
+    """
+    try:
+        from risk_service import portfolio_risk
+        status = webhook_server.order_manager.get_broker_status()
+        positions = []
+        for broker in status.values():
+            total = 0.0
+            for pos in broker.get('positions', []):
+                total += float(pos.get('value', pos.get('market_value', 0)) or 0)
+            for pos in broker.get('positions', []):
+                sym = pos.get('symbol')
+                val = float(pos.get('value', pos.get('market_value', 0)) or 0)
+                if sym and total > 0:
+                    positions.append((sym, val / total))
+        if not positions:
+            return jsonify({'positions': 0, 'sufficient_data': False,
+                            'message': 'no open positions'})
+        return jsonify(portfolio_risk(positions))
+    except Exception as exc:
+        logger.error(f"Portfolio risk failed: {exc}")
+        return jsonify({'error': str(exc)}), 500
+
 
 if __name__ == '__main__':
     host = os.environ.get('API_HOST', '0.0.0.0')

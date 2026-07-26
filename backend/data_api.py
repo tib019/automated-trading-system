@@ -60,6 +60,12 @@ class ApiClient:
                 return self._reddit(query)
             if endpoint == "Twitter/search_twitter":
                 return self._twitter(query)
+            if endpoint == "StockTwits/symbol_stream":
+                return self._stocktwits(query)
+            if endpoint == "Stooq/daily":
+                return self._stooq(query)
+            if endpoint == "FearGreed/crypto":
+                return self._fear_greed(query)
         except Exception as exc:  # never let a data source take down the pipeline
             logger.warning("data_api call to %s failed: %s", endpoint, exc)
         return self._empty_for(endpoint)
@@ -138,6 +144,68 @@ class ApiClient:
             )
         return {"tweets": tweets}
 
+    def _stocktwits(self, query: dict) -> dict:
+        """StockTwits symbol stream - a free, finance-native sentiment source.
+
+        Many messages carry an explicit Bullish/Bearish label; unlabeled ones
+        fall back to text sentiment downstream. Returns
+        {'messages': [{'body': str, 'sentiment': 'Bullish'|'Bearish'|None,
+        'user': str, 'likes': int}]}.
+        """
+        symbol = query.get("symbol", "")
+        url = f"https://api.stocktwits.com/api/2/streams/symbol/{symbol}.json"
+        resp = self.session.get(url, timeout=_TIMEOUT)
+        resp.raise_for_status()
+        out = []
+        for m in resp.json().get("messages", []):
+            ent = (m.get("entities") or {}).get("sentiment") or {}
+            out.append({
+                "body": m.get("body", ""),
+                "sentiment": ent.get("basic"),  # 'Bullish' / 'Bearish' / None
+                "user": (m.get("user") or {}).get("username", ""),
+                "likes": (m.get("likes") or {}).get("total", 0),
+            })
+        return {"messages": out}
+
+    def _stooq(self, query: dict) -> dict:
+        """Stooq daily OHLC as a keyless market-data fallback when Yahoo is
+        unavailable. Returns {'candles': [{'date','open','high','low','close',
+        'volume'}]}. Stooq tickers usually need a suffix (e.g. 'aapl.us')."""
+        symbol = query.get("symbol", "").lower()
+        url = f"https://stooq.com/q/d/l/?s={symbol}&i={query.get('interval', 'd')}"
+        resp = self.session.get(url, timeout=_TIMEOUT)
+        resp.raise_for_status()
+        lines = resp.text.strip().splitlines()
+        candles = []
+        for line in lines[1:]:  # skip header
+            parts = line.split(",")
+            if len(parts) >= 6 and parts[1] not in ("", "N/D"):
+                try:
+                    candles.append({
+                        "date": parts[0], "open": float(parts[1]),
+                        "high": float(parts[2]), "low": float(parts[3]),
+                        "close": float(parts[4]), "volume": float(parts[5]),
+                    })
+                except ValueError:
+                    continue
+        return {"candles": candles}
+
+    def _fear_greed(self, query: dict) -> dict:
+        """Crypto Fear & Greed index (alternative.me) - a market-regime gauge,
+        no key. Returns {'value': int 0-100, 'classification': str}."""
+        limit = query.get("limit", 1)
+        resp = self.session.get(f"https://api.alternative.me/fng/?limit={limit}", timeout=_TIMEOUT)
+        resp.raise_for_status()
+        data = resp.json().get("data", [])
+        if not data:
+            return {"value": None, "classification": None}
+        latest = data[0]
+        return {
+            "value": int(latest.get("value", 0)),
+            "classification": latest.get("value_classification"),
+            "history": data,
+        }
+
     @staticmethod
     def _empty_for(endpoint: str) -> dict:
         if endpoint == "YahooFinance/get_stock_chart":
@@ -146,4 +214,10 @@ class ApiClient:
             return {"posts": []}
         if endpoint == "Twitter/search_twitter":
             return {"tweets": []}
+        if endpoint == "StockTwits/symbol_stream":
+            return {"messages": []}
+        if endpoint == "Stooq/daily":
+            return {"candles": []}
+        if endpoint == "FearGreed/crypto":
+            return {"value": None, "classification": None}
         return {}
