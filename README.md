@@ -1,6 +1,6 @@
 # Automated Trading System
 
-Full-Stack-Anwendung zur automatisierten Handelsstrategie auf Basis von Social-Media-Sentiment. Das System sammelt Daten aus Twitter, Reddit und Yahoo Finance, verarbeitet sie mit NLP/ML-Algorithmen, generiert Trading-Signale und führt Orders über eine Broker-Integration aus — abgesichert durch einen dedizierten Risk-Manager und Kill-Switch.
+Full-Stack-Anwendung zur automatisierten Handelsstrategie auf Basis von Social-Media-Sentiment. Das System sammelt Daten aus Twitter, Reddit und Yahoo Finance, verarbeitet sie mit NLP/ML-Algorithmen, generiert Trading-Signale und führt Orders über eine Broker-Integration aus — abgesichert durch einen dedizierten Risk-Manager und Kill-Switch. Entstanden als **Engineering-Lernprojekt**; Betrieb ausschließlich im Paper-Trading.
 
 ## Architektur
 
@@ -89,17 +89,11 @@ automated-trading-system/
 - [ADR-002 – Flask + synchrones Python statt FastAPI](docs/adr/002-flask-synchron.md)
 - [ADR-003 – Kill-Switch als dedizierter Safety-Layer](docs/adr/003-kill-switch-architektur.md)
 
-## Backtesting-Ergebnisse
+## Backtesting-Engine
 
-| Metrik | Wert |
-|--------|------|
-| Anzahl Test-Trades | 240+ |
-| Win Rate | 58.3% |
-| Profit Factor | 1.42 |
-| Sharpe Ratio | 1.87 |
-| Max Drawdown | -12.4% |
+Das System enthält eine Backtesting-Engine, die Strategien gegen historische Daten laufen lässt und Equity-Kurve, Trade-Log, Drawdown und Win-Rate berechnet.
 
-*Backtesting-Ergebnisse basieren auf historischen Daten und sind kein Indikator für zukünftige Performance.*
+> **Bewusst ohne Performance-Kennzahlen.** Backtest-Zahlen aus einem nicht out-of-sample validierten Setup sind kein seriöser Qualitätsmaßstab — sie blenden Overfitting, Survivorship Bias, Slippage und Gebühren aus und sagen wenig über echte Marktperformance. Dieses Repo ist ein **Engineering-Showcase** (Pipeline-Architektur, dedizierter Safety-Layer, Tests, Containerisierung), **kein profitables Handelssystem**. Betrieb ausschließlich im Paper-Trading.
 
 ## Installation
 
