@@ -330,3 +330,4 @@ ipython_config.py
 config.bak
 settings.bak
 
+.venv/
