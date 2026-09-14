@@ -1,5 +1,8 @@
 # Automated Trading System
 
+![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)
+![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)
+
 Full-Stack-Anwendung zur automatisierten Handelsstrategie auf Basis von Social-Media-Sentiment. Das System sammelt Daten aus Twitter, Reddit und Yahoo Finance, verarbeitet sie mit NLP/ML-Algorithmen, generiert Trading-Signale und führt Orders über eine Broker-Integration aus — abgesichert durch einen dedizierten Risk-Manager und Kill-Switch.
 
 ## Architektur
