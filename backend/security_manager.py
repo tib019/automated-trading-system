@@ -21,6 +21,64 @@ import logging
 from functools import wraps
 import ipaddress
 
+def ensure_security_schema(db_path: str) -> None:
+    """Lege die Tabellen der Sicherheitsdatenbank an, falls sie fehlen.
+
+    Frueher entstand das Schema ausschliesslich im Konstruktor von
+    SecurityManager. RateLimiter und SessionManager greifen auf dieselbe
+    Datenbank zu, legten sie aber nicht an — wurden sie einzeln benutzt,
+    scheiterte jede Abfrage. Die Anweisungen sind saemtlich
+    CREATE TABLE IF NOT EXISTS, der Aufruf ist also beliebig wiederholbar.
+    """
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS api_keys (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            service_name TEXT UNIQUE NOT NULL,
+            encrypted_key TEXT NOT NULL,
+            encrypted_secret TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            last_used TIMESTAMP,
+            is_active BOOLEAN DEFAULT 1
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS security_events (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_type TEXT NOT NULL,
+            severity TEXT NOT NULL,
+            source_ip TEXT,
+            user_agent TEXT,
+            details TEXT,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS rate_limits (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ip_address TEXT NOT NULL,
+            endpoint TEXT NOT NULL,
+            request_count INTEGER DEFAULT 1,
+            window_start TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(ip_address, endpoint)
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS sessions (
+            session_id TEXT PRIMARY KEY,
+            user_id TEXT,
+            ip_address TEXT,
+            user_agent TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            expires_at TIMESTAMP,
+            is_active BOOLEAN DEFAULT 1
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+
 class SecurityManager:
     """Comprehensive security management for the trading system"""
     
@@ -50,63 +108,8 @@ class SecurityManager:
     
     def _init_database(self):
         """Initialize security database"""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
-        
-        # API Keys table
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS api_keys (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                service_name TEXT UNIQUE NOT NULL,
-                encrypted_key TEXT NOT NULL,
-                encrypted_secret TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                last_used TIMESTAMP,
-                is_active BOOLEAN DEFAULT 1
-            )
-        ''')
-        
-        # Security events table
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS security_events (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                event_type TEXT NOT NULL,
-                severity TEXT NOT NULL,
-                source_ip TEXT,
-                user_agent TEXT,
-                details TEXT,
-                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
-        
-        # Rate limiting table
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS rate_limits (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ip_address TEXT NOT NULL,
-                endpoint TEXT NOT NULL,
-                request_count INTEGER DEFAULT 1,
-                window_start TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                UNIQUE(ip_address, endpoint)
-            )
-        ''')
-        
-        # Sessions table
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS sessions (
-                session_id TEXT PRIMARY KEY,
-                user_id TEXT,
-                ip_address TEXT,
-                user_agent TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                expires_at TIMESTAMP,
-                is_active BOOLEAN DEFAULT 1
-            )
-        ''')
-        
-        conn.commit()
-        conn.close()
-    
+        ensure_security_schema(self.db_path)
+
     def _load_or_create_master_key(self):
         """Load or create master encryption key"""
         key_file = in_base('.master_key')
@@ -121,7 +124,13 @@ class SecurityManager:
                     self.master_key = key_data
         else:
             # Generate new master key
-            password = os.environ.get('TRADING_MASTER_PASSWORD', 'default_password_change_me')
+            password = os.environ.get('TRADING_MASTER_PASSWORD')
+            if not password:
+                raise RuntimeError(
+                    "TRADING_MASTER_PASSWORD ist nicht gesetzt. Der Master-Schluessel "
+                    "wurde bisher aus einem im Quelltext stehenden Passwort abgeleitet — "
+                    "damit laesst sich jedes hinterlegte API-Geheimnis entschluesseln."
+                )
             salt = os.urandom(16)
             
             kdf = PBKDF2HMAC(
@@ -334,6 +343,10 @@ class RateLimiter:
     
     def __init__(self):
         self.db_path = in_base('security.db')
+        # RateLimiter fragte rate_limits ab, ohne die Tabelle je anzulegen: wurde
+        # er ohne vorher erzeugten SecurityManager benutzt, brach jede Anfrage mit
+        # "no such table: rate_limits" ab.
+        ensure_security_schema(self.db_path)
         self.limits = {
             'webhook': {'requests': 60, 'window': 60},  # 60 requests per minute
             'api': {'requests': 100, 'window': 60},     # 100 requests per minute
@@ -387,6 +400,7 @@ class SessionManager:
     
     def __init__(self):
         self.db_path = in_base('security.db')
+        ensure_security_schema(self.db_path)
         self.session_timeout = 3600  # 1 hour
     
     def create_session(self, user_id: str, ip_address: str, user_agent: str) -> str:

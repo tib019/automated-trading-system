@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Abhaengigkeiten installieren
+        run: pip install -r backend/requirements.txt pytest
+
+      - name: Tests
+        env:
+          # Wegwerf-Werte ausschliesslich fuer den CI-Lauf. Beide sind seit der
+          # Haertung Pflicht: ohne WEBHOOK_SECRET weist der Webhook-Server jede
+          # Anfrage ab, ohne TRADING_MASTER_PASSWORD legt der SecurityManager
+          # keinen Master-Schluessel an.
+          WEBHOOK_SECRET: ci-only-not-a-real-secret
+          TRADING_MASTER_PASSWORD: ci-only-not-a-real-password
+        run: pytest -q

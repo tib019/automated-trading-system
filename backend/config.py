@@ -135,10 +135,12 @@ class TradingConfig:
     
     # Webhook-Einstellungen
     WEBHOOK_CONFIG = {
-        'secret': 'default_secret',
+        # Kein Default-Secret mehr: der Wert kommt aus WEBHOOK_SECRET.
+        # Ein im Quelltext stehendes Secret ist kein Secret.
+        'secret': None,
         'enabled_brokers': ['PAPER_TRADING'],
         'max_requests_per_minute': 60,
-        'require_signature': False,
+        'require_signature': True,
         'allowed_ips': [],  # Leer = alle IPs erlaubt
         'log_all_requests': True
     }

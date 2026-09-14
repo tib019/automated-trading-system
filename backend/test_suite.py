@@ -16,7 +16,7 @@ import sys
 # Repo-relativ statt auf einen Pfad der urspruenglichen Entwicklungsmaschine
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from security_manager import SecurityManager, RateLimiter, SessionManager
+from security_manager import SecurityManager, RateLimiter, SessionManager, ensure_security_schema
 from config import TradingConfig
 # data_collector_v2 importiert das Modul "data_api", das in diesem Repository
 # nicht existiert und auch nie darin existiert hat — es stammt aus der
@@ -40,6 +40,25 @@ from sentiment_analyzer import AdvancedSentimentAnalyzer as SentimentAnalyzer
 from signal_generator import SignalGenerator
 from risk_manager import RiskManager
 from order_manager import OrderManager
+import shutil
+import tempfile
+from datetime import datetime
+
+from order_manager import (
+    BrokerType,
+    Order,
+    OrderStatus,
+    OrderType,
+    PaperTradingInterface,
+)
+from risk_manager import PortfolioTracker
+from signal_generator import (
+    SignalStrength,
+    SignalType,
+    TechnicalAnalyzer,
+    TradingSignal,
+)
+
 
 
 class TestSecurityManager(unittest.TestCase):
@@ -130,48 +149,42 @@ class TestSecurityManager(unittest.TestCase):
 
 
 class TestRateLimiter(unittest.TestCase):
-    """Test rate limiting functionality"""
-    
+    """Rate Limiting.
+
+    Die Vorgaengerfassung setzte db_path auf ':memory:' und legte die Tabelle
+    ueber eine eigene Verbindung an. sqlite gibt fuer jede Verbindung zu
+    ':memory:' aber eine eigene, leere Datenbank aus — der RateLimiter sah die
+    Tabelle nie und jeder Aufruf endete in "no such table: rate_limits".
+    Der Test benutzt deshalb eine temporaere Datei; das Schema legt der
+    RateLimiter seit dieser Aenderung selbst an.
+    """
+
     def setUp(self):
+        self.tmpdir = tempfile.mkdtemp()
         self.rate_limiter = RateLimiter()
-        # Use test database
-        self.rate_limiter.db_path = ':memory:'
-        
-        # Initialize test database
-        conn = sqlite3.connect(self.rate_limiter.db_path)
-        cursor = conn.cursor()
-        cursor.execute('''
-            CREATE TABLE rate_limits (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ip_address TEXT NOT NULL,
-                endpoint TEXT NOT NULL,
-                request_count INTEGER DEFAULT 1,
-                window_start TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                UNIQUE(ip_address, endpoint)
-            )
-        ''')
-        conn.commit()
-        conn.close()
-    
+        self.rate_limiter.db_path = os.path.join(self.tmpdir, "security_test.db")
+        ensure_security_schema(self.rate_limiter.db_path)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
     def test_rate_limiting(self):
-        """Test rate limiting logic"""
+        """Nach Erreichen des Limits wird die IP gesperrt."""
         ip_address = "127.0.0.1"
         endpoint = "test"
-        
-        # Set low limit for testing
-        self.rate_limiter.limits['test'] = {'requests': 2, 'window': 60}
-        
-        # First request should pass
-        is_limited = self.rate_limiter.is_rate_limited(ip_address, endpoint)
-        self.assertFalse(is_limited)
-        
-        # Second request should pass
-        is_limited = self.rate_limiter.is_rate_limited(ip_address, endpoint)
-        self.assertFalse(is_limited)
-        
-        # Third request should be limited
-        is_limited = self.rate_limiter.is_rate_limited(ip_address, endpoint)
-        self.assertTrue(is_limited)
+        self.rate_limiter.limits[endpoint] = {"requests": 2, "window": 60}
+
+        self.assertFalse(self.rate_limiter.is_rate_limited(ip_address, endpoint))
+        self.assertFalse(self.rate_limiter.is_rate_limited(ip_address, endpoint))
+        self.assertTrue(self.rate_limiter.is_rate_limited(ip_address, endpoint))
+
+    def test_andere_ip_ist_nicht_mitbetroffen(self):
+        endpoint = "test"
+        self.rate_limiter.limits[endpoint] = {"requests": 1, "window": 60}
+
+        self.rate_limiter.is_rate_limited("10.0.0.1", endpoint)
+        self.assertTrue(self.rate_limiter.is_rate_limited("10.0.0.1", endpoint))
+        self.assertFalse(self.rate_limiter.is_rate_limited("10.0.0.2", endpoint))
 
 
 @SKIP_DATA_COLLECTOR
@@ -223,188 +236,214 @@ class TestDataCollector(unittest.TestCase):
 
 
 class TestSentimentAnalyzer(unittest.TestCase):
-    """Test sentiment analysis functionality"""
-    
+    """Sentiment-Analyse gegen die tatsaechliche API.
+
+    Die frueheren Faelle riefen analyze_sentiment() auf und erwarteten ein Dict.
+    Die Klasse heisst AdvancedSentimentAnalyzer und bietet
+    analyze_text_sentiment(text) -> (score, confidence).
+    """
+
     def setUp(self):
         self.analyzer = SentimentAnalyzer()
-    
-    def test_sentiment_analysis(self):
-        """Test sentiment analysis"""
-        # Positive sentiment
-        positive_text = "Bitcoin is going to the moon! 🚀 Great investment!"
-        positive_result = self.analyzer.analyze_sentiment(positive_text)
-        self.assertGreater(positive_result['sentiment_score'], 0)
-        
-        # Negative sentiment
-        negative_text = "Bitcoin is crashing! Sell everything! 💀"
-        negative_result = self.analyzer.analyze_sentiment(negative_text)
-        self.assertLess(negative_result['sentiment_score'], 0)
-        
-        # Neutral sentiment
-        neutral_text = "Bitcoin price is $50000"
-        neutral_result = self.analyzer.analyze_sentiment(neutral_text)
-        self.assertAlmostEqual(neutral_result['sentiment_score'], 0, delta=0.3)
-    
-    def test_confidence_calculation(self):
-        """Test confidence score calculation"""
-        text = "Bitcoin is absolutely amazing! Best investment ever! 🚀🚀🚀"
-        result = self.analyzer.analyze_sentiment(text)
-        
-        self.assertGreater(result['confidence'], 0.5)
-        self.assertLessEqual(result['confidence'], 1.0)
+
+    def test_positives_sentiment_ergibt_positiven_score(self):
+        score, _ = self.analyzer.analyze_text_sentiment(
+            "Bitcoin is going to the moon! Great investment, very bullish!"
+        )
+        self.assertGreater(score, 0)
+
+    def test_negatives_sentiment_ergibt_negativen_score(self):
+        score, _ = self.analyzer.analyze_text_sentiment(
+            "Bitcoin is crashing! Sell everything, this is a bearish dump!"
+        )
+        self.assertLess(score, 0)
+
+    def test_leerer_text_ist_neutral_und_ohne_konfidenz(self):
+        score, confidence = self.analyzer.analyze_text_sentiment("")
+        self.assertEqual(score, 0.0)
+        self.assertEqual(confidence, 0.0)
+
+    def test_score_und_konfidenz_bleiben_in_ihren_grenzen(self):
+        texte = [
+            "Bitcoin is absolutely amazing! Best investment ever!",
+            "Total scam, avoid at all cost, massive loss incoming",
+            "Bitcoin price is 50000 dollars",
+        ]
+        for text in texte:
+            with self.subTest(text=text):
+                score, confidence = self.analyzer.analyze_text_sentiment(text)
+                self.assertGreaterEqual(score, -1.0)
+                self.assertLessEqual(score, 1.0)
+                self.assertGreaterEqual(confidence, 0.0)
+                self.assertLessEqual(confidence, 1.0)
 
 
-class TestSignalGenerator(unittest.TestCase):
-    """Test signal generation functionality"""
-    
+class TestTechnicalAnalyzer(unittest.TestCase):
+    """Technische Indikatoren.
+
+    Die Berechnungen liegen in TechnicalAnalyzer, nicht in SignalGenerator, und
+    liefern Listen, keine Einzelwerte — die alten Faelle pruefen beides falsch.
+    """
+
     def setUp(self):
-        self.generator = SignalGenerator()
-    
-    def test_technical_indicators(self):
-        """Test technical indicator calculations"""
-        # Mock price data
-        prices = [100, 102, 101, 103, 105, 104, 106, 108, 107, 109]
-        
-        # Test SMA
-        sma = self.generator.calculate_sma(prices, period=5)
-        self.assertIsInstance(sma, float)
-        self.assertGreater(sma, 0)
-        
-        # Test EMA
-        ema = self.generator.calculate_ema(prices, period=5)
-        self.assertIsInstance(ema, float)
-        self.assertGreater(ema, 0)
-        
-        # Test RSI
-        rsi = self.generator.calculate_rsi(prices, period=5)
-        self.assertIsInstance(rsi, float)
-        self.assertGreaterEqual(rsi, 0)
-        self.assertLessEqual(rsi, 100)
-    
-    def test_signal_generation(self):
-        """Test signal generation"""
-        # Mock market data
-        market_data = {
-            'symbol': 'BTC-USD',
-            'price': 50000,
-            'volume': 1000000,
-            'price_history': [48000, 49000, 50000, 51000, 50000]
-        }
-        
-        # Mock sentiment data
-        sentiment_data = {
-            'sentiment_score': 0.5,
-            'confidence': 0.8
-        }
-        
-        signal = self.generator.generate_signal(market_data, sentiment_data)
-        
-        self.assertIn('action', signal)
-        self.assertIn('strength', signal)
-        self.assertIn('confidence', signal)
-        self.assertIn(signal['action'], ['BUY', 'SELL', 'HOLD'])
-        self.assertIn(signal['strength'], ['WEAK', 'MODERATE', 'STRONG'])
+        self.analyzer = TechnicalAnalyzer()
+        self.prices = [100, 102, 101, 103, 105, 104, 106, 108, 107, 109]
+
+    def test_sma_rechnet_das_gleitende_mittel_korrekt(self):
+        sma = self.analyzer.calculate_sma(self.prices, period=5)
+        self.assertIsInstance(sma, list)
+        # Bei 10 Kursen und Periode 5 gibt es 6 Fenster.
+        self.assertEqual(len(sma), len(self.prices) - 5 + 1)
+        # Erstes Fenster: (100+102+101+103+105)/5
+        self.assertAlmostEqual(sma[0], 102.2, places=6)
+        # Letztes Fenster: (106+108+107+109+104)/5 -> aus den letzten fuenf Werten
+        self.assertAlmostEqual(sma[-1], sum(self.prices[-5:]) / 5, places=6)
+
+    def test_ema_hat_dieselbe_laenge_wie_die_kursreihe_oder_kuerzer(self):
+        ema = self.analyzer.calculate_ema(self.prices, period=5)
+        self.assertIsInstance(ema, list)
+        self.assertGreater(len(ema), 0)
+        self.assertLessEqual(len(ema), len(self.prices))
+        for wert in ema:
+            self.assertGreater(wert, 0)
+
+    def test_rsi_bleibt_zwischen_0_und_100(self):
+        rsi = self.analyzer.calculate_rsi(self.prices, period=5)
+        self.assertIsInstance(rsi, list)
+        for wert in rsi:
+            self.assertGreaterEqual(wert, 0)
+            self.assertLessEqual(wert, 100)
+
+    def test_zu_kurze_kursreihe_liefert_leere_liste_statt_absturz(self):
+        self.assertEqual(self.analyzer.calculate_sma([100, 101], period=5), [])
 
 
 class TestRiskManager(unittest.TestCase):
-    """Test risk management functionality"""
-    
+    """Risikomanagement gegen die tatsaechliche API.
+
+    Die frueheren Faelle riefen calculate_position_size(), validate_position()
+    und should_trigger_kill_switch() auf — keine davon existiert. Real sind
+    validate_signal(), trigger_kill_switch() und deactivate_kill_switch().
+    Das Portfolio laeuft auf einer temporaeren Datenbank, damit der Test keine
+    echten Bestaende anfasst.
+    """
+
     def setUp(self):
+        self.tmpdir = tempfile.mkdtemp()
         self.risk_manager = RiskManager()
-    
-    def test_position_sizing(self):
-        """Test position sizing calculation"""
-        account_balance = 10000
-        risk_per_trade = 0.02  # 2%
-        entry_price = 50000
-        stop_loss_price = 47500
-        
-        position_size = self.risk_manager.calculate_position_size(
-            account_balance, risk_per_trade, entry_price, stop_loss_price
+        self.risk_manager.portfolio_tracker = PortfolioTracker(
+            db_path=os.path.join(self.tmpdir, "portfolio_test.db")
         )
-        
-        self.assertGreater(position_size, 0)
-        self.assertLess(position_size, account_balance)
-    
-    def test_risk_validation(self):
-        """Test risk validation"""
-        # Test valid position
-        valid_position = {
-            'symbol': 'BTC-USD',
-            'side': 'BUY',
-            'quantity': 0.1,
-            'price': 50000
-        }
-        
-        is_valid = self.risk_manager.validate_position(valid_position)
-        self.assertTrue(is_valid)
-        
-        # Test oversized position
-        oversized_position = {
-            'symbol': 'BTC-USD',
-            'side': 'BUY',
-            'quantity': 10,  # Too large
-            'price': 50000
-        }
-        
-        is_valid = self.risk_manager.validate_position(oversized_position)
-        self.assertFalse(is_valid)
-    
-    def test_kill_switch(self):
-        """Test kill switch functionality"""
-        # Simulate large losses
-        self.risk_manager.portfolio_value = 8000  # 20% loss from 10000
-        
-        should_trigger = self.risk_manager.should_trigger_kill_switch()
-        self.assertTrue(should_trigger)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def _signal(self, position_size_percent=1.0, symbol="BTC-USD"):
+        return TradingSignal(
+            symbol=symbol,
+            timestamp=datetime.now(),
+            signal_type=SignalType.BUY,
+            strength=SignalStrength.MODERATE,
+            entry_price=50000.0,
+            stop_loss=49000.0,
+            take_profit=53000.0,
+            confidence=0.8,
+            reasoning="Testsignal",
+            sentiment_score=0.5,
+            technical_score=0.5,
+            volume_score=0.5,
+            position_size_percent=position_size_percent,
+            risk_reward_ratio=3.0,
+        )
+
+    def test_aktiver_kill_switch_weist_jedes_signal_ab(self):
+        self.risk_manager.trigger_kill_switch("Test")
+        self.assertTrue(self.risk_manager.kill_switch_active)
+
+        erlaubt, begruendung = self.risk_manager.validate_signal(self._signal())
+
+        self.assertFalse(erlaubt)
+        self.assertIn("Kill-Switch", begruendung)
+
+    def test_kill_switch_laesst_sich_wieder_aufheben(self):
+        self.risk_manager.trigger_kill_switch("Test")
+        self.risk_manager.deactivate_kill_switch("Test beendet")
+        self.assertFalse(self.risk_manager.kill_switch_active)
+
+    def test_uebergrosse_position_wird_abgelehnt(self):
+        # 95 % des Portfolios in eine einzige Position sprengt sowohl die
+        # Exposure- als auch die Symbol-Konzentrationsgrenze.
+        erlaubt, begruendung = self.risk_manager.validate_signal(
+            self._signal(position_size_percent=95.0)
+        )
+        self.assertFalse(erlaubt)
+        self.assertTrue(begruendung)
+
+    def test_validate_signal_liefert_immer_ein_paar_aus_entscheidung_und_grund(self):
+        ergebnis = self.risk_manager.validate_signal(self._signal())
+        self.assertIsInstance(ergebnis, tuple)
+        self.assertEqual(len(ergebnis), 2)
+        self.assertIsInstance(ergebnis[0], bool)
+        self.assertIsInstance(ergebnis[1], str)
 
 
 class TestOrderManager(unittest.TestCase):
-    """Test order management functionality"""
-    
+    """Orderabwicklung ueber das Paper-Trading-Interface.
+
+    Die frueheren Faelle riefen create_order()/validate_order() mit Dicts auf.
+    Real nimmt OrderManager fertige Signale entgegen (execute_signal), und die
+    Broker-Anbindung arbeitet mit Order-Objekten.
+    """
+
     def setUp(self):
-        self.order_manager = OrderManager()
-    
-    def test_order_creation(self):
-        """Test order creation"""
-        order_data = {
-            'symbol': 'BTC-USD',
-            'side': 'BUY',
-            'quantity': 0.1,
-            'price': 50000,
-            'order_type': 'MARKET'
-        }
-        
-        order = self.order_manager.create_order(order_data)
-        
-        self.assertIn('id', order)
-        self.assertIn('status', order)
-        self.assertEqual(order['symbol'], 'BTC-USD')
-        self.assertEqual(order['side'], 'BUY')
-    
-    def test_order_validation(self):
-        """Test order validation"""
-        # Valid order
-        valid_order = {
-            'symbol': 'BTC-USD',
-            'side': 'BUY',
-            'quantity': 0.1,
-            'price': 50000,
-            'order_type': 'LIMIT'
-        }
-        
-        is_valid = self.order_manager.validate_order(valid_order)
-        self.assertTrue(is_valid)
-        
-        # Invalid order (missing required fields)
-        invalid_order = {
-            'symbol': 'BTC-USD',
-            'side': 'BUY'
-            # Missing quantity and price
-        }
-        
-        is_valid = self.order_manager.validate_order(invalid_order)
-        self.assertFalse(is_valid)
+        self.broker = PaperTradingInterface({"initial_balance": 100000})
+        self.broker.connect()
+
+    def _order(self, quantity=0.1, price=50000.0):
+        jetzt = datetime.now()
+        return Order(
+            id="test-order-1",
+            broker_order_id=None,
+            symbol="BTC-USD",
+            order_type=OrderType.MARKET,
+            side=SignalType.BUY,
+            quantity=quantity,
+            price=price,
+            stop_price=None,
+            status=OrderStatus.PENDING,
+            broker=BrokerType.PAPER_TRADING,
+            created_at=jetzt,
+            updated_at=jetzt,
+        )
+
+    def test_paper_trading_ist_nach_connect_verbunden(self):
+        self.assertTrue(self.broker.connect())
+
+    def test_startguthaben_entspricht_der_konfiguration(self):
+        balance = self.broker.get_account_balance()
+        self.assertIn("USD", balance)
+        # get_account_balance liefert je Waehrung ein Dict aus free/locked/total.
+        self.assertEqual(balance["USD"]["total"], 100000)
+
+    def test_order_wird_angenommen_und_belastet_das_guthaben(self):
+        vorher = self.broker.get_account_balance()["USD"]["free"]
+
+        erfolg, meldung = self.broker.submit_order(self._order())
+
+        self.assertTrue(erfolg, meldung)
+        self.assertLess(self.broker.get_account_balance()["USD"]["free"], vorher)
+
+    def test_order_ueber_dem_guthaben_wird_abgelehnt(self):
+        erfolg, meldung = self.broker.submit_order(self._order(quantity=1000))
+
+        self.assertFalse(erfolg)
+        self.assertTrue(meldung)
+
+    def test_order_manager_meldet_den_status_seiner_broker(self):
+        manager = OrderManager()
+        manager.connect_brokers()
+        status = manager.get_broker_status()
+        self.assertIsInstance(status, dict)
 
 
 @SKIP_DATA_COLLECTOR

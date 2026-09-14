@@ -6,6 +6,7 @@ Tests security manager and related security features
 from paths import BASE_DIR, in_base
 import unittest
 import tempfile
+import shutil
 import os
 import json
 import sqlite3
@@ -16,7 +17,7 @@ import sys
 # Repo-relativ statt auf einen Pfad der urspruenglichen Entwicklungsmaschine
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from security_manager import SecurityManager, RateLimiter, SessionManager
+from security_manager import SecurityManager, RateLimiter, SessionManager, ensure_security_schema
 
 
 class TestSecurityManager(unittest.TestCase):
@@ -117,77 +118,62 @@ class TestSecurityManager(unittest.TestCase):
 
 
 class TestRateLimiter(unittest.TestCase):
-    """Test rate limiting functionality"""
-    
+    """Rate Limiting.
+
+    Die Vorgaengerfassung setzte db_path auf ':memory:' und legte die Tabelle
+    ueber eine eigene Verbindung an. sqlite gibt fuer jede Verbindung zu
+    ':memory:' aber eine eigene, leere Datenbank aus — der RateLimiter sah die
+    Tabelle nie und jeder Aufruf endete in "no such table: rate_limits".
+    Der Test benutzt deshalb eine temporaere Datei; das Schema legt der
+    RateLimiter seit dieser Aenderung selbst an.
+    """
+
     def setUp(self):
+        self.tmpdir = tempfile.mkdtemp()
         self.rate_limiter = RateLimiter()
-        # Use test database
-        self.rate_limiter.db_path = ':memory:'
-        
-        # Initialize test database
-        conn = sqlite3.connect(self.rate_limiter.db_path)
-        cursor = conn.cursor()
-        cursor.execute('''
-            CREATE TABLE rate_limits (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ip_address TEXT NOT NULL,
-                endpoint TEXT NOT NULL,
-                request_count INTEGER DEFAULT 1,
-                window_start TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                UNIQUE(ip_address, endpoint)
-            )
-        ''')
-        conn.commit()
-        conn.close()
-    
+        self.rate_limiter.db_path = os.path.join(self.tmpdir, "security_test.db")
+        ensure_security_schema(self.rate_limiter.db_path)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
     def test_rate_limiting(self):
-        """Test rate limiting logic"""
+        """Nach Erreichen des Limits wird die IP gesperrt."""
         ip_address = "127.0.0.1"
         endpoint = "test"
-        
-        # Set low limit for testing
-        self.rate_limiter.limits['test'] = {'requests': 2, 'window': 60}
-        
-        # First request should pass
-        is_limited = self.rate_limiter.is_rate_limited(ip_address, endpoint)
-        self.assertFalse(is_limited)
-        
-        # Second request should pass
-        is_limited = self.rate_limiter.is_rate_limited(ip_address, endpoint)
-        self.assertFalse(is_limited)
-        
-        # Third request should be limited
-        is_limited = self.rate_limiter.is_rate_limited(ip_address, endpoint)
-        self.assertTrue(is_limited)
-        
-        print(f" Rate limiting test passed")
+        self.rate_limiter.limits[endpoint] = {"requests": 2, "window": 60}
+
+        self.assertFalse(self.rate_limiter.is_rate_limited(ip_address, endpoint))
+        self.assertFalse(self.rate_limiter.is_rate_limited(ip_address, endpoint))
+        self.assertTrue(self.rate_limiter.is_rate_limited(ip_address, endpoint))
+
+    def test_andere_ip_ist_nicht_mitbetroffen(self):
+        endpoint = "test"
+        self.rate_limiter.limits[endpoint] = {"requests": 1, "window": 60}
+
+        self.rate_limiter.is_rate_limited("10.0.0.1", endpoint)
+        self.assertTrue(self.rate_limiter.is_rate_limited("10.0.0.1", endpoint))
+        self.assertFalse(self.rate_limiter.is_rate_limited("10.0.0.2", endpoint))
 
 
 class TestSessionManager(unittest.TestCase):
-    """Test session management functionality"""
-    
+    """Sitzungsverwaltung.
+
+    Wie beim RateLimiter lag die Testdatenbank auf ':memory:' — sqlite gibt
+    jeder Verbindung dorthin eine eigene, leere Datenbank, die in setUp
+    angelegte sessions-Tabelle war fuer den SessionManager also nicht sichtbar.
+    Ersetzt durch eine temporaere Datei.
+    """
+
     def setUp(self):
+        self.tmpdir = tempfile.mkdtemp()
         self.session_manager = SessionManager()
-        # Use test database
-        self.session_manager.db_path = ':memory:'
-        
-        # Initialize test database
-        conn = sqlite3.connect(self.session_manager.db_path)
-        cursor = conn.cursor()
-        cursor.execute('''
-            CREATE TABLE sessions (
-                session_id TEXT PRIMARY KEY,
-                user_id TEXT,
-                ip_address TEXT,
-                user_agent TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                expires_at TIMESTAMP,
-                is_active BOOLEAN DEFAULT 1
-            )
-        ''')
-        conn.commit()
-        conn.close()
-    
+        self.session_manager.db_path = os.path.join(self.tmpdir, "sessions_test.db")
+        ensure_security_schema(self.session_manager.db_path)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
     def test_session_creation_and_validation(self):
         """Test session creation and validation"""
         user_id = "test_user"

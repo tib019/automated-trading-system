@@ -6,6 +6,7 @@ Flask-basierter Webhook-Server für TradingView-Signale
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os
 import json
 import logging
 from datetime import datetime
@@ -30,7 +31,20 @@ class WebhookServer:
     def __init__(self):
         self.config = get_config()
         self.order_manager = OrderManager()
-        self.webhook_secret = self.config.WEBHOOK_CONFIG.get('secret', 'default_secret')
+        # Das Secret kommt aus der Umgebung. Der frühere Default 'default_secret'
+        # war nicht nur schwach — er schaltete die Signaturprüfung zusätzlich
+        # ganz ab (siehe tradingview_webhook), sodass jeder, der den Endpunkt
+        # erreichte, Handelssignale einspeisen konnte.
+        secret = os.environ.get('WEBHOOK_SECRET') or self.config.WEBHOOK_CONFIG.get('secret')
+        self.webhook_secret = None if secret in (None, '', 'default_secret') else secret
+        if not self.webhook_secret:
+            # Kein Abbruch beim Import — der Server laeuft, weist aber jede
+            # eingehende Anfrage ab (fail closed), statt sie ungeprueft
+            # durchzulassen.
+            logger.critical(
+                "WEBHOOK_SECRET ist nicht gesetzt. Alle eingehenden Webhooks "
+                "werden abgewiesen, bis ein Secret hinterlegt ist."
+            )
         self.enabled_brokers = self.config.WEBHOOK_CONFIG.get('enabled_brokers', ['PAPER_TRADING'])
         
         # Verbinde mit Brokern
@@ -45,7 +59,13 @@ class WebhookServer:
         }
     
     def verify_signature(self, payload: str, signature: str) -> bool:
-        """Verifiziere Webhook-Signatur"""
+        """Verifiziere Webhook-Signatur. Ohne Secret wird nichts akzeptiert."""
+        if not self.webhook_secret:
+            logger.error(
+                "Signaturpruefung nicht moeglich: WEBHOOK_SECRET fehlt. Anfrage abgewiesen."
+            )
+            return False
+
         if not signature:
             return False
         
@@ -201,11 +221,14 @@ def tradingview_webhook():
         payload = request.get_data(as_text=True)
         signature = request.headers.get('X-Signature', '')
         
-        # Verifiziere Signatur (optional)
-        if webhook_server.webhook_secret != 'default_secret':
-            if not webhook_server.verify_signature(payload, signature):
-                logger.warning("Invalid webhook signature")
-                return jsonify({'error': 'Invalid signature'}), 401
+        # Signatur ist Pflicht. Vorher wurde die Pruefung uebersprungen, wenn das
+        # Secret noch auf dem Default stand — also genau im unsicheren Fall.
+        if not webhook_server.verify_signature(payload, signature):
+            logger.warning(
+                "Webhook mit ungueltiger oder fehlender Signatur abgewiesen (von %s)",
+                request.remote_addr,
+            )
+            return jsonify({'error': 'Invalid signature'}), 401
         
         # Parse JSON
         try:
@@ -234,7 +257,23 @@ def tradingview_webhook():
 
 @app.route('/webhook/test', methods=['POST'])
 def test_webhook():
-    """Test Webhook Endpoint"""
+    """Test Webhook Endpoint
+
+    Dieser Endpunkt erzeugt ein vollstaendiges Kaufsignal und reicht es an
+    process_webhook weiter — er loest also eine echte Order aus. Er war
+    oeffentlich und ohne jede Pruefung erreichbar. Er ist jetzt standardmaessig
+    aus und muss ueber WEBHOOK_TEST_ENABLED=1 ausdruecklich freigeschaltet
+    werden.
+    """
+    if os.environ.get('WEBHOOK_TEST_ENABLED') != '1':
+        return jsonify({
+            'success': False,
+            'error': (
+                'Test-Endpunkt ist deaktiviert. Zum Freischalten '
+                'WEBHOOK_TEST_ENABLED=1 setzen.'
+            ),
+        }), 403
+
     test_data = {
         'ticker': 'BTC-USD',
         'action': 'BUY',
