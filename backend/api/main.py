@@ -1,10 +1,13 @@
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+from paths import BASE_DIR, in_base
 import os
 import sys
 # DON'T CHANGE THIS !!!
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 # Add trading system to path
-sys.path.append('/home/ubuntu/trading_system')
+sys.path.append(BASE_DIR)
 
 from flask import Flask, send_from_directory, jsonify, request
 from flask_cors import CORS
@@ -193,9 +196,9 @@ def internal_error(error):
     }), 500
 
 if __name__ == '__main__':
- print("Starting Trading System API...")
- print("Dashboard: http://localhost:5000")
- print("API Health: http://localhost:5000/api/health")
- print("System Status: http://localhost:5000/api/status")
+    print("Starting Trading System API...")
+    print("Dashboard: http://localhost:5000")
+    print("API Health: http://localhost:5000/api/health")
+    print("System Status: http://localhost:5000/api/status")
     app.run(host='0.0.0.0', port=5000, debug=True)
 

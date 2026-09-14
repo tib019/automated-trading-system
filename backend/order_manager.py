@@ -4,6 +4,7 @@ Trading System - Order Management Module
 Umfassendes Order-Management für verschiedene Broker-Integrationen
 """
 
+from paths import BASE_DIR, in_base
 import sqlite3
 import logging
 import json
@@ -404,7 +405,7 @@ class OrderManager:
         self.config = get_config()
         self.risk_manager = RiskManager()
         self.brokers = {}
-        self.db_path = '/home/ubuntu/trading_system/trading_data.db'
+        self.db_path = in_base('trading_data.db')
         
         # Initialisiere Datenbank
         self._init_order_database()
@@ -556,8 +557,8 @@ class OrderManager:
             cursor.execute('''
                 INSERT OR REPLACE INTO orders 
                 (id, broker_order_id, symbol, order_type, side, quantity, price, stop_price,
-                 status, broker, created_at, updated_at, filled_quantity, avg_fill_price, 
-                 commission, error_message)
+                status, broker, created_at, updated_at, filled_quantity, avg_fill_price, 
+                commission, error_message)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 order.id, order.broker_order_id, order.symbol, order.order_type.value,
@@ -630,13 +631,13 @@ class OrderManager:
 def main():
     """Test des Order-Management-Systems"""
     print("=" * 80)
- print("ORDER MANAGEMENT SYSTEM TEST")
+    print("ORDER MANAGEMENT SYSTEM TEST")
     print("=" * 80)
     
     order_manager = OrderManager()
     
     # Verbinde mit Brokern
- print("Connecting to brokers...")
+    print("Connecting to brokers...")
     connection_results = order_manager.connect_brokers()
     
     for broker_type, connected in connection_results.items():
@@ -644,12 +645,12 @@ def main():
         print(f"   {broker_type.value}: {status}")
     
     # Hole Broker-Status
- print(f"\n Broker Status:")
+    print(f"\n Broker Status:")
     broker_status = order_manager.get_broker_status()
     
     for broker_name, status in broker_status.items():
         print(f"\n{broker_name}:")
- print(f" Connected: {'' if status['connected'] else ''}")
+        print(f" Connected: {'' if status['connected'] else ''}")
         
         if status['connected']:
             balances = status['balances']
@@ -670,7 +671,7 @@ def main():
                 print(f"   Positions: None")
     
     # Test Order-Ausführung mit Paper Trading
- print(f"\n Testing order execution...")
+    print(f"\n Testing order execution...")
     
     from signal_generator import TradingSignal, SignalStrength
     
@@ -694,12 +695,12 @@ def main():
     success, message = order_manager.execute_signal(test_signal, BrokerType.PAPER_TRADING)
     
     if success:
- print(f" Test order executed: {message}")
+        print(f" Test order executed: {message}")
     else:
- print(f" Test order failed: {message}")
+        print(f" Test order failed: {message}")
     
     # Zeige Order-Historie
- print(f"\n Order History:")
+    print(f"\n Order History:")
     orders = order_manager.get_order_history(5)
     
     if orders:
@@ -709,7 +710,7 @@ def main():
     else:
         print("No orders found")
     
- print(f"\n Order Management System test completed!")
+        print(f"\n Order Management System test completed!")
 
 if __name__ == "__main__":
     main()

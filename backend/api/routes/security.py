@@ -3,11 +3,14 @@ Security routes for the Flask API
 Handles security monitoring, audit, and management
 """
 
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+from paths import BASE_DIR, in_base
 from flask import Blueprint, jsonify, request, current_app
 import sys
 
 # Add trading system to path
-sys.path.append('/home/ubuntu/trading_system')
+sys.path.append(BASE_DIR)
 
 security_bp = Blueprint('security', __name__)
 

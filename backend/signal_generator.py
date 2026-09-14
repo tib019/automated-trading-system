@@ -4,6 +4,7 @@ Trading System - Signal Generation Module
 Generiert Trading-Signale basierend auf Sentiment und technischen Indikatoren
 """
 
+from paths import BASE_DIR, in_base
 import sqlite3
 import logging
 import numpy as np
@@ -55,7 +56,7 @@ class TradingSignal:
 class TechnicalAnalyzer:
     """Technische Analyse-Komponenten"""
     
-    def __init__(self, db_path: str = '/home/ubuntu/trading_system/trading_data.db'):
+    def __init__(self, db_path: str = in_base('trading_data.db')):
         self.db_path = db_path
         self.config = get_config()
     

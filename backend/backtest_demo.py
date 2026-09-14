@@ -4,6 +4,7 @@ Backtesting Demo mit simulierten historischen Daten
 Zeigt die Funktionalität des Backtesting-Frameworks
 """
 
+from paths import BASE_DIR, in_base
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -20,7 +21,7 @@ class BacktestDemo:
         self.engine = BacktestingEngine()
     
     def generate_synthetic_data(self, symbol: str, start_date: datetime, end_date: datetime, 
-                              initial_price: float = 100.0) -> pd.DataFrame:
+    initial_price: float = 100.0) -> pd.DataFrame:
         """Generiere synthetische Marktdaten für Demo"""
         
         # Erstelle Zeitindex (stündliche Daten)
@@ -79,7 +80,7 @@ class BacktestDemo:
         """Führe Demo-Backtest mit synthetischen Daten durch"""
         
         print("=" * 80)
- print("BACKTESTING DEMO - SYNTHETIC DATA")
+        print("BACKTESTING DEMO - SYNTHETIC DATA")
         print("=" * 80)
         
         # Demo-Parameter
@@ -200,7 +201,7 @@ class BacktestDemo:
         plt.tight_layout()
         
         # Speichere Chart
-        chart_path = '/home/ubuntu/trading_system/backtest_demo_chart.png'
+        chart_path = in_base('backtest_demo_chart.png')
         plt.savefig(chart_path, dpi=300, bbox_inches='tight')
         plt.close()
         
@@ -338,24 +339,24 @@ def main():
     result = demo.run_demo_backtest()
     
     # Erstelle Visualisierung
- print(f"\n Creating backtest visualization...")
+    print(f"\n Creating backtest visualization...")
     chart_path = demo.create_backtest_visualization(result)
     print(f"Chart saved: {chart_path}")
     
     # Generiere Bericht
- print(f"\n Generating comprehensive report...")
+    print(f"\n Generating comprehensive report...")
     report = demo.generate_demo_report(result)
     print(report)
     
     # Speichere Bericht
-    report_path = '/home/ubuntu/trading_system/backtest_demo_report.txt'
+    report_path = in_base('backtest_demo_report.txt')
     with open(report_path, 'w') as f:
         f.write(report)
     
- print(f"\n Report saved: {report_path}")
+        print(f"\n Report saved: {report_path}")
     
     # Speichere JSON-Ergebnisse
-    results_path = '/home/ubuntu/trading_system/backtest_demo_results.json'
+    results_path = in_base('backtest_demo_results.json')
     with open(results_path, 'w') as f:
         json.dump({
             'result': result.__dict__,
@@ -370,7 +371,7 @@ def main():
     
     print(f"Results saved: {results_path}")
     
- print(f"\n BACKTESTING DEMO COMPLETED SUCCESSFULLY!")
+    print(f"\n BACKTESTING DEMO COMPLETED SUCCESSFULLY!")
 
 if __name__ == "__main__":
     main()

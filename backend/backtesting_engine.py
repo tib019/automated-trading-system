@@ -4,6 +4,7 @@ Trading System - Backtesting Engine
 Umfassendes Framework für Strategie-Backtesting mit historischen Daten
 """
 
+from paths import BASE_DIR, in_base
 import sqlite3
 import pandas as pd
 import numpy as np
@@ -63,7 +64,7 @@ class BacktestTrade:
 class HistoricalDataManager:
     """Manager für historische Marktdaten"""
     
-    def __init__(self, db_path: str = '/home/ubuntu/trading_system/trading_data.db'):
+    def __init__(self, db_path: str = in_base('trading_data.db')):
         self.db_path = db_path
         self.config = get_config()
     
@@ -137,7 +138,7 @@ class BacktestingEngine:
                     strategy_name: str = "Default Strategy") -> BacktestResult:
         """Führe Backtest für gegebene Symbole und Zeitraum durch"""
         
- print(f" Starting backtest: {strategy_name}")
+        print(f" Starting backtest: {strategy_name}")
         print(f"   Period: {start_date.date()} to {end_date.date()}")
         print(f"   Symbols: {', '.join(symbols)}")
         print(f"   Initial Capital: ${self.initial_capital:,.2f}")
@@ -176,7 +177,7 @@ class BacktestingEngine:
         # Berechne finale Metriken
         result = self._calculate_backtest_metrics(portfolio, strategy_name, start_date, end_date)
         
- print(f" Backtest completed!")
+        print(f" Backtest completed!")
         print(f"   Final Capital: ${result.final_capital:,.2f}")
         print(f"   Total Return: {result.total_return_percent:+.2f}%")
         print(f"   Total Trades: {result.total_trades}")
@@ -185,7 +186,7 @@ class BacktestingEngine:
         return result
     
     def _process_trading_day(self, current_date: datetime, historical_data: Dict[str, pd.DataFrame], 
-                           portfolio: Dict):
+    portfolio: Dict):
         """Verarbeite einen Trading-Tag"""
         
         # Update Portfolio-Wert
@@ -426,7 +427,7 @@ class BacktestingEngine:
             return (position['entry_price'] - current_price) * position['quantity']
     
     def _calculate_backtest_metrics(self, portfolio: Dict, strategy_name: str, 
-                                  start_date: datetime, end_date: datetime) -> BacktestResult:
+    start_date: datetime, end_date: datetime) -> BacktestResult:
         """Berechne umfassende Backtest-Metriken"""
         
         trades = portfolio['trades']
@@ -524,7 +525,7 @@ class BacktestingEngine:
 def main():
     """Test des Backtesting-Frameworks"""
     print("=" * 80)
- print("BACKTESTING ENGINE TEST")
+    print("BACKTESTING ENGINE TEST")
     print("=" * 80)
     
     engine = BacktestingEngine()
@@ -544,7 +545,7 @@ def main():
         )
         
         # Zeige Ergebnisse
- print(f"\n BACKTEST RESULTS:")
+        print(f"\n BACKTEST RESULTS:")
         print(f"   Strategy: {result.strategy_name}")
         print(f"   Period: {result.start_date.date()} to {result.end_date.date()}")
         print(f"   Initial Capital: ${result.initial_capital:,.2f}")
@@ -558,14 +559,14 @@ def main():
         print(f"   Volatility: {result.volatility:.2f}%")
         
         # Speichere Ergebnisse
-        results_path = '/home/ubuntu/trading_system/backtest_results.json'
+        results_path = in_base('backtest_results.json')
         with open(results_path, 'w') as f:
             json.dump(asdict(result), f, indent=2, default=str)
         
- print(f"\n Results saved to: {results_path}")
+            print(f"\n Results saved to: {results_path}")
         
     except Exception as e:
- print(f" Backtest failed: {e}")
+        print(f" Backtest failed: {e}")
         print("This is expected if no historical data is available")
 
 if __name__ == "__main__":

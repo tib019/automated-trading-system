@@ -4,6 +4,7 @@ Trading System - Advanced Sentiment Analysis Module
 Erweiterte Sentiment-Analyse für Trading-Entscheidungen
 """
 
+from paths import BASE_DIR, in_base
 import re
 import math
 import sqlite3
@@ -224,7 +225,7 @@ class AdvancedSentimentAnalyzer:
 class SentimentAggregator:
     """Aggregiert Sentiment-Daten für Trading-Signale"""
     
-    def __init__(self, db_path: str = '/home/ubuntu/trading_system/trading_data.db'):
+    def __init__(self, db_path: str = in_base('trading_data.db')):
         self.db_path = db_path
         self.config = get_config()
         self.analyzer = AdvancedSentimentAnalyzer()

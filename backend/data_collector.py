@@ -4,6 +4,7 @@ Trading System - Data Collector Module
 Sammelt Daten von verschiedenen Quellen für automatisierte Trading-Entscheidungen
 """
 
+from paths import BASE_DIR, in_base
 import sys
 import json
 import sqlite3
@@ -21,7 +22,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('/home/ubuntu/trading_system/data_collector.log'),
+        logging.FileHandler(in_base('data_collector.log')),
         logging.StreamHandler()
     ]
 )
@@ -223,7 +224,7 @@ class TwitterCollector(DataCollector):
 class DatabaseManager:
     """Verwaltet SQLite-Datenbank für gesammelte Daten"""
     
-    def __init__(self, db_path: str = '/home/ubuntu/trading_system/trading_data.db'):
+    def __init__(self, db_path: str = in_base('trading_data.db')):
         self.db_path = db_path
         self.init_database()
     

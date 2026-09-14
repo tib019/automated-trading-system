@@ -4,6 +4,7 @@ Finale Backtesting-Demo mit angepassten Parametern
 Zeigt vollständige Funktionalität mit generierten Trades
 """
 
+from paths import BASE_DIR, in_base
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -23,7 +24,7 @@ class EnhancedBacktestDemo:
         self.signal_threshold = 0.2  # Reduziert von 0.5
     
     def generate_trending_data(self, symbol: str, start_date: datetime, end_date: datetime, 
-                             initial_price: float, trend_strength: float = 0.001) -> pd.DataFrame:
+    initial_price: float, trend_strength: float = 0.001) -> pd.DataFrame:
         """Generiere Daten mit klaren Trends für bessere Signale"""
         
         date_range = pd.date_range(start=start_date, end=end_date, freq='h')
@@ -182,7 +183,7 @@ class EnhancedBacktestDemo:
         """Führe erweiterten Backtest mit garantierten Trades durch"""
         
         print("=" * 80)
- print("ENHANCED BACKTESTING DEMO - GUARANTEED TRADES")
+        print("ENHANCED BACKTESTING DEMO - GUARANTEED TRADES")
         print("=" * 80)
         
         # Demo-Parameter
@@ -322,9 +323,9 @@ class EnhancedBacktestDemo:
             explode = (0.05, 0.05)
             
             ax4.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', 
-                   startangle=90, explode=explode)
+            startangle=90, explode=explode)
             ax4.set_title(f'Win/Loss Distribution\n(Total Trades: {result.total_trades})', 
-                         fontsize=14, fontweight='bold')
+            fontsize=14, fontweight='bold')
         else:
             ax4.text(0.5, 0.5, 'No Trades\nExecuted', ha='center', va='center', 
                     transform=ax4.transAxes, fontsize=16, fontweight='bold')
@@ -333,7 +334,7 @@ class EnhancedBacktestDemo:
         plt.tight_layout()
         
         # Speichere Chart
-        chart_path = '/home/ubuntu/trading_system/enhanced_backtest_chart.png'
+        chart_path = in_base('enhanced_backtest_chart.png')
         plt.savefig(chart_path, dpi=300, bbox_inches='tight')
         plt.close()
         
@@ -348,7 +349,7 @@ def main():
     result, portfolio_data = demo.run_enhanced_backtest()
     
     # Zeige detaillierte Ergebnisse
- print(f"\n ENHANCED BACKTEST RESULTS:")
+    print(f"\n ENHANCED BACKTEST RESULTS:")
     print(f"   Strategy: {result.strategy_name}")
     print(f"   Total Return: ${result.total_return:+,.2f} ({result.total_return_percent:+.2f}%)")
     print(f"   Max Drawdown: {result.max_drawdown_percent:.2f}%")
@@ -359,7 +360,7 @@ def main():
     
     # Trade-Details
     if portfolio_data['trades']:
- print(f"\n TRADE DETAILS:")
+        print(f"\n TRADE DETAILS:")
         for i, trade in enumerate(portfolio_data['trades'][:5], 1):  # Zeige erste 5 Trades
             print(f"   {i}. {trade.symbol} {trade.signal_type.value}: ${trade.pnl:+.2f} ({trade.pnl_percent:+.1f}%) - {trade.exit_reason}")
         
@@ -367,12 +368,12 @@ def main():
             print(f"   ... and {len(portfolio_data['trades']) - 5} more trades")
     
     # Erstelle Visualisierung
- print(f"\n Creating enhanced visualization...")
+    print(f"\n Creating enhanced visualization...")
     chart_path = demo.create_enhanced_visualization(result, portfolio_data)
     print(f"Enhanced chart saved: {chart_path}")
     
     # Speichere Ergebnisse
-    results_path = '/home/ubuntu/trading_system/enhanced_backtest_results.json'
+    results_path = in_base('enhanced_backtest_results.json')
     with open(results_path, 'w') as f:
         json.dump({
             'result': asdict(result),
@@ -389,7 +390,7 @@ def main():
         }, f, indent=2, default=str)
     
     print(f"Enhanced results saved: {results_path}")
- print(f"\n ENHANCED BACKTESTING DEMO COMPLETED!")
+    print(f"\n ENHANCED BACKTESTING DEMO COMPLETED!")
 
 if __name__ == "__main__":
     main()

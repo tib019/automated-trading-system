@@ -4,6 +4,7 @@ Trading System - Risk Management Module
 Umfassendes Risikomanagement für automatisierte Trading-Entscheidungen
 """
 
+from paths import BASE_DIR, in_base
 import sqlite3
 import logging
 import json
@@ -68,7 +69,7 @@ class PortfolioMetrics:
 class PortfolioTracker:
     """Portfolio-Tracking und -Verwaltung"""
     
-    def __init__(self, db_path: str = '/home/ubuntu/trading_system/trading_data.db'):
+    def __init__(self, db_path: str = in_base('trading_data.db')):
         self.db_path = db_path
         self.config = get_config()
         self.initial_capital = self.config.BACKTESTING['initial_capital']

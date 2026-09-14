@@ -4,6 +4,7 @@ Trading System - Enhanced Data Collector Module v2
 Verbesserte Datensammlung mit besserer Symbol-Erkennung und Scheduling
 """
 
+from paths import BASE_DIR, in_base
 import sys
 import re
 import time
@@ -23,7 +24,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('/home/ubuntu/trading_system/data_collector_v2.log'),
+        logging.FileHandler(in_base('data_collector_v2.log')),
         logging.StreamHandler()
     ]
 )

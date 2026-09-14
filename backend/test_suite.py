@@ -13,12 +13,30 @@ from unittest.mock import Mock, patch, MagicMock
 import sys
 
 # Add the trading system to path
-sys.path.append('/home/ubuntu/trading_system')
+# Repo-relativ statt auf einen Pfad der urspruenglichen Entwicklungsmaschine
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from security_manager import SecurityManager, RateLimiter, SessionManager
 from config import TradingConfig
-from data_collector_v2 import DataCollector
-from sentiment_analyzer import SentimentAnalyzer
+# data_collector_v2 importiert das Modul "data_api", das in diesem Repository
+# nicht existiert und auch nie darin existiert hat — es stammt aus der
+# urspruenglichen Entwicklungsumgebung. Solange es fehlt, laesst sich der
+# Datensammler nirgends importieren. Frueher riss dieser Import die gesamte
+# Sammlung ab, sodass auch die 47 davon unabhaengigen Tests nicht liefen.
+# Der Import ist daher optional; die betroffenen Faelle werden mit klarer
+# Begruendung uebersprungen, statt die ganze Suite zu blockieren.
+try:
+    from data_collector_v2 import DataCollector
+    DATA_COLLECTOR_IMPORT_ERROR = None
+except ImportError as exc:  # pragma: no cover
+    DataCollector = None
+    DATA_COLLECTOR_IMPORT_ERROR = str(exc)
+
+SKIP_DATA_COLLECTOR = unittest.skipIf(
+    DataCollector is None,
+    f"data_collector_v2 nicht importierbar: {DATA_COLLECTOR_IMPORT_ERROR}",
+)
+from sentiment_analyzer import AdvancedSentimentAnalyzer as SentimentAnalyzer
 from signal_generator import SignalGenerator
 from risk_manager import RiskManager
 from order_manager import OrderManager
@@ -156,6 +174,7 @@ class TestRateLimiter(unittest.TestCase):
         self.assertTrue(is_limited)
 
 
+@SKIP_DATA_COLLECTOR
 class TestDataCollector(unittest.TestCase):
     """Test data collection functionality"""
     
@@ -388,6 +407,7 @@ class TestOrderManager(unittest.TestCase):
         self.assertFalse(is_valid)
 
 
+@SKIP_DATA_COLLECTOR
 class TestIntegration(unittest.TestCase):
     """Integration tests for complete workflows"""
     

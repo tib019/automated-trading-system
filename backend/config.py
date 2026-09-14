@@ -4,6 +4,7 @@ Trading System - Configuration Module
 Zentrale Konfiguration für das automatisierte Trading-System
 """
 
+from paths import BASE_DIR, in_base
 from typing import Dict, List, Any
 from dataclasses import dataclass
 import json
@@ -103,7 +104,7 @@ class TradingConfig:
     
     # Datenbank-Einstellungen
     DATABASE = {
-        'path': '/home/ubuntu/trading_system/trading_data.db',
+        'path': in_base('trading_data.db'),
         'backup_frequency_hours': 24,
         'cleanup_days': 30  # Lösche Daten älter als 30 Tage
     }
@@ -111,7 +112,7 @@ class TradingConfig:
     # Logging-Einstellungen
     LOGGING = {
         'level': 'INFO',
-        'file_path': '/home/ubuntu/trading_system/trading_system.log',
+        'file_path': in_base('trading_system.log'),
         'max_file_size_mb': 10,
         'backup_count': 5
     }
@@ -145,7 +146,7 @@ class TradingConfig:
 class ConfigManager:
     """Verwaltet Konfiguration und ermöglicht dynamische Updates"""
     
-    def __init__(self, config_file: str = '/home/ubuntu/trading_system/config.json'):
+    def __init__(self, config_file: str = in_base('config.json')):
         self.config_file = config_file
         self.config = TradingConfig()
         self.load_config()

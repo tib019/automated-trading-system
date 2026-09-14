@@ -4,6 +4,7 @@ Trading System - Portfolio Dashboard
 Interaktives Dashboard für Portfolio-Monitoring und Risikomanagement
 """
 
+from paths import BASE_DIR, in_base
 import sqlite3
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -175,7 +176,7 @@ class PortfolioDashboard:
         plt.tight_layout()
         
         # Speichere Chart
-        chart_path = '/home/ubuntu/trading_system/portfolio_chart.png'
+        chart_path = in_base('portfolio_chart.png')
         plt.savefig(chart_path, dpi=300, bbox_inches='tight')
         plt.close()
         
@@ -227,7 +228,7 @@ class PortfolioDashboard:
         plt.tight_layout()
         
         # Speichere Chart
-        chart_path = '/home/ubuntu/trading_system/positions_chart.png'
+        chart_path = in_base('positions_chart.png')
         plt.savefig(chart_path, dpi=300, bbox_inches='tight')
         plt.close()
         
@@ -268,7 +269,7 @@ class PortfolioDashboard:
             ]
         }
         
-        export_path = '/home/ubuntu/trading_system/portfolio_export.json'
+        export_path = in_base('portfolio_export.json')
         with open(export_path, 'w') as f:
             json.dump(export_data, f, indent=2)
         
@@ -303,7 +304,7 @@ class PortfolioDashboard:
 def main():
     """Test des Portfolio-Dashboards"""
     print("=" * 80)
- print("PORTFOLIO DASHBOARD TEST")
+    print("PORTFOLIO DASHBOARD TEST")
     print("=" * 80)
     
     dashboard = PortfolioDashboard()
@@ -313,7 +314,7 @@ def main():
     print(report)
     
     # Erstelle Charts
- print("\n Creating portfolio charts...")
+    print("\n Creating portfolio charts...")
     
     try:
         portfolio_chart = dashboard.create_portfolio_chart(days=1)
@@ -331,7 +332,7 @@ def main():
     export_path = dashboard.export_portfolio_data()
     print(f"Portfolio data exported: {export_path}")
     
- print("\n Dashboard test completed!")
+    print("\n Dashboard test completed!")
 
 if __name__ == "__main__":
     main()

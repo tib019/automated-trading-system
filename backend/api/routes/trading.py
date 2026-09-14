@@ -3,12 +3,15 @@ Trading routes for the Flask API
 Handles data collection, signal generation, and trading operations
 """
 
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+from paths import BASE_DIR, in_base
 from flask import Blueprint, jsonify, request, current_app
 import sys
 import os
 
 # Add trading system to path
-sys.path.append('/home/ubuntu/trading_system')
+sys.path.append(BASE_DIR)
 
 trading_bp = Blueprint('trading', __name__)
 

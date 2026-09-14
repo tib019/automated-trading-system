@@ -3,6 +3,7 @@ Deployment Script for Trading System
 Handles system integration, deployment, and monitoring setup
 """
 
+from paths import BASE_DIR, in_base
 import os
 import subprocess
 import json
@@ -13,7 +14,7 @@ class TradingSystemDeployer:
     """Handles deployment of the complete trading system"""
     
     def __init__(self):
-        self.base_dir = '/home/ubuntu/trading_system'
+        self.base_dir = BASE_DIR
         self.api_dir = '/home/ubuntu/trading-api'
         self.dashboard_dir = '/home/ubuntu/trading-dashboard'
         self.deployment_log = []
@@ -97,39 +98,39 @@ CMD ["python", "src/main_simple.py"]
         docker_compose_content = """version: '3.8'
 
 services:
-  trading-api:
+    trading-api:
     build: .
     ports:
-      - "5001:5001"
+        - "5001:5001"
     environment:
-      - FLASK_ENV=production
-      - TRADING_MASTER_PASSWORD=${TRADING_MASTER_PASSWORD}
-      - WEBHOOK_SECRET=${WEBHOOK_SECRET}
+        - FLASK_ENV=production
+        - TRADING_MASTER_PASSWORD=${TRADING_MASTER_PASSWORD}
+        - WEBHOOK_SECRET=${WEBHOOK_SECRET}
     volumes:
-      - ./data:/app/data
-      - ./logs:/app/logs
+        - ./data:/app/data
+        - ./logs:/app/logs
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5001/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+        test: ["CMD", "curl", "-f", "http://localhost:5001/api/health"]
+        interval: 30s
+        timeout: 10s
+        retries: 3
+        start_period: 40s
 
-  trading-dashboard:
+        trading-dashboard:
     image: nginx:alpine
     ports:
-      - "3000:80"
+        - "3000:80"
     volumes:
-      - ./dashboard/dist:/usr/share/nginx/html
-      - ./nginx.conf:/etc/nginx/nginx.conf
+        - ./dashboard/dist:/usr/share/nginx/html
+        - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
-      - trading-api
+        - trading-api
     restart: unless-stopped
 
 volumes:
-  trading_data:
-  trading_logs:
+    trading_data:
+        trading_logs:
 """
         
         with open(os.path.join(self.api_dir, 'docker-compose.yml'), 'w') as f:
@@ -489,10 +490,10 @@ def main():
     deployer.save_deployment_log()
     
     if success:
- print("\n Trading System is ready for deployment!")
- print("Read DEPLOYMENT_SUMMARY.md for detailed instructions")
+        print("\n Trading System is ready for deployment!")
+        print("Read DEPLOYMENT_SUMMARY.md for detailed instructions")
     else:
- print("\n Deployment failed. Check the logs for details.")
+        print("\n Deployment failed. Check the logs for details.")
     
     return success
 
